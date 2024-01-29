@@ -14,9 +14,11 @@ function createWindow(): void {
     center: true,
     title: 'Note++',
     frame: true,
-    // vibrancy: 'under-window', {only for mac os}
+    // vibrancy: 'under-window', Both are for mac os
+    // trafficLightPosition: { x: 15, y: 10 },
     visualEffectState: 'inactive',
     titleBarStyle: 'default',
+
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),
       sandbox: true,
