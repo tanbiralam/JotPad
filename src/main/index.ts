@@ -11,6 +11,12 @@ function createWindow(): void {
     show: false,
     autoHideMenuBar: true,
     ...(process.platform === 'linux' ? { icon } : {}),
+    center: true,
+    title: 'Note++',
+    frame: true,
+    // vibrancy: 'under-window', {only for mac os}
+    visualEffectState: 'inactive',
+    titleBarStyle: 'default',
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),
       sandbox: true,
