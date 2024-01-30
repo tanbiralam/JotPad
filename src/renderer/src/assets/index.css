@@ -13,7 +13,16 @@
 
         @apply bg-transparent;
 
-        @apply font-mono antialiased text-white;
+        @apply font-mono antialiased text-black;
         @apply overflow-hidden;
     }
+
+    /* For draggable windows for only mac and linux */
+    /* header {
+        -webkit-app-region: drag;
+    }
+
+    button {
+        -webkit-app-region: no-drag;
+    } */
 }
