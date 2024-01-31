@@ -25,4 +25,16 @@
     button {
         -webkit-app-region: no-drag;
     } */
+
+    ::-webkit-scrollbar {
+        @apply w-2;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        @apply bg-[#555]
+    }
+
+    ::-webkit-scrollbar-track {
+        @apply bg-transparent
+    }
 }
