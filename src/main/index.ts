@@ -12,7 +12,7 @@ function createWindow(): void {
     autoHideMenuBar: true,
     ...(process.platform === 'linux' ? { icon } : {}),
     center: true,
-    title: 'Note++',
+    title: 'JotPad',
     frame: true,
     // vibrancy: 'under-window', Both are for mac os
     // trafficLightPosition: { x: 15, y: 10 },

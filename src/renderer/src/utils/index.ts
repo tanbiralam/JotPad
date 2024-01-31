@@ -4,7 +4,7 @@ import { twMerge } from 'tailwind-merge'
 const dateFormatter = new Intl.DateTimeFormat(window.context.locale, {
   dateStyle: 'short',
   timeStyle: 'short'
-  // timeZone: 'UTC'
+  // timeZone: 'UTC' // Optionally specify a specific time zone, or omit for system's local time
 })
 
 export const formatDateFromMs = (ms: number) => dateFormatter.format(ms)
