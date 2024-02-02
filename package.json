@@ -24,6 +24,7 @@
     "@electron-toolkit/preload": "^3.0.0",
     "@electron-toolkit/utils": "^3.0.0",
     "@mdxeditor/editor": "^2.5.1",
+    "jotai": "^2.6.4",
     "tailwind-merge": "^2.2.1"
   },
   "devDependencies": {
