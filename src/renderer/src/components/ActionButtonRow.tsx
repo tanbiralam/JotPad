@@ -3,7 +3,7 @@ import { AddNote, DeleteNote } from './Button'
 
 export const ActionButtonRow = ({ ...props }: ComponentProps<'div'>) => {
   return (
-    <div>
+    <div {...props}>
       <AddNote />
       <DeleteNote />
     </div>

@@ -24,6 +24,7 @@
     "@electron-toolkit/preload": "^3.0.0",
     "@electron-toolkit/utils": "^3.0.0",
     "@mdxeditor/editor": "^2.5.1",
+    "fs-extra": "^11.2.0",
     "jotai": "^2.6.4",
     "tailwind-merge": "^2.2.1"
   },
@@ -44,6 +45,7 @@
     "electron-vite": "^2.0.0",
     "eslint": "^8.56.0",
     "eslint-plugin-react": "^7.33.2",
+    "lodash": "^4.17.21",
     "postcss": "^8.4.33",
     "prettier": "^3.2.4",
     "react": "^18.2.0",
