@@ -14,9 +14,10 @@ export const getNotes: GetNotes = async () => {
 
   await ensureDir(rootDir)
 
-  const notesFileNames = await readdir(rootDir, {
-    encoding: fileEncoding //TODO: Fix these two encoding & filter issue
-  })
+  const notesFileNames = readdir(rootDir, {
+    encoding: fileEncoding,
+    withFileTypes: false
+  } as { encoding: BufferEncoding }) as unknown as string[]
 
   const notes = notesFileNames.filter((fileName) => fileName.endsWith('.md'))
 
@@ -24,9 +25,8 @@ export const getNotes: GetNotes = async () => {
 }
 
 export const getNoteInfoFromFileName = async (filename: string): Promise<NoteInfo> => {
-  const filePath = `${getRootDir()}/${filename}`
-  const fileStats: Stats = await new Promise((resolve, reject) => {
-    stat(filePath, (err, stats) => {
+  const fileStats = await new Promise<Stats>((resolve, reject) => {
+    stat(`${getRootDir()}/${filename}`, (err, stats) => {
       if (err) reject(err)
       else resolve(stats)
     })
