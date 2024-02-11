@@ -1,4 +1,4 @@
-# note-app
+# Open Source Note-app
 
 ## Recommended IDE Setup
 
