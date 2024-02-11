@@ -6,8 +6,8 @@ import { ActionButton, ActionButtonProps } from './ActionButton'
 export const AddNote = ({ ...props }: ActionButtonProps) => {
   const createEmptyNote = useSetAtom(createNote)
 
-  const handleCreate = () => {
-    createEmptyNote()
+  const handleCreate = async () => {
+    await createEmptyNote()
   }
 
   return (

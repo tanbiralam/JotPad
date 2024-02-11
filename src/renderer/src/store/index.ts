@@ -36,12 +36,14 @@ export const selectedNoteAtom = unwrap(selectedNoteAtomAsync, (prev) => prev) ??
   lastEditTime: Date.now()
 }
 
-export const createNote = atom(null, (get, set) => {
+export const createNote = atom(null, async (get, set) => {
   const notes = get(notesAtom)
 
   if (!notes) return
 
-  const title = `Note ${notes.length + 1}`
+  const title = await window.context.createnote()
+
+  if (!title) return
 
   const newNote: NoteInfo = {
     title,
@@ -53,11 +55,15 @@ export const createNote = atom(null, (get, set) => {
   set(selectedNoteIndexAtom, 0)
 })
 
-export const deleteNote = atom(null, (get, set) => {
+export const deleteNote = atom(null, async (get, set) => {
   const notes = get(notesAtom)
   const selectedNote = get(selectedNoteAtom)
 
   if (!selectedNote || !notes) return
+
+  const isDeleted = await window.context.deletenote(selectedNote.title)
+
+  if (!isDeleted) return
 
   set(
     notesAtom,

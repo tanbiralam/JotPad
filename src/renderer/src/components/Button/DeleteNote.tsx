@@ -5,8 +5,8 @@ import { ActionButton, ActionButtonProps } from './ActionButton'
 
 export const DeleteNote = ({ ...props }: ActionButtonProps) => {
   const deleteEmptyNote = useSetAtom(deleteNote)
-  const handleDelete = () => {
-    deleteEmptyNote()
+  const handleDelete = async () => {
+    await deleteEmptyNote()
   }
 
   return (

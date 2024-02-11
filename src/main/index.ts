@@ -1,6 +1,6 @@
-import { createnote, getNotes, readNote, writeNote } from '@/lib'
+import { createnote, deletenote, getNotes, readNote, writeNote } from '@/lib'
 import { electronApp, is, optimizer } from '@electron-toolkit/utils'
-import { CreateNote, GetNotes, ReadNote, WriteNote } from '@shared/types'
+import { CreateNote, DeleteNote, GetNotes, ReadNote, WriteNote } from '@shared/types'
 import { BrowserWindow, app, ipcMain, shell } from 'electron'
 import { join } from 'path'
 import icon from '../../resources/icon.png?asset'
@@ -67,6 +67,7 @@ app.whenReady().then(() => {
   ipcMain.handle('readNote', (_, ...args: Parameters<ReadNote>) => readNote(...args))
   ipcMain.handle('writeNote', (_, ...args: Parameters<WriteNote>) => writeNote(...args))
   ipcMain.handle('createnote', (_, ...args: Parameters<CreateNote>) => createnote(...args))
+  ipcMain.handle('deletenote', (_, ...args: Parameters<DeleteNote>) => deletenote(...args))
 
   createWindow()
 
