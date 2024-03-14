@@ -1,5 +1,7 @@
 # Open Source Note-app
 
+TODO: 1. Update the UI (must) 2. Give access to save file in any directory 3. Bundle the application
+
 ## Recommended IDE Setup
 
 - [VSCode](https://code.visualstudio.com/) + [ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint) + [Prettier](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode)
