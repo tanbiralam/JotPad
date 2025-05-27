@@ -17,14 +17,18 @@ export const NotePreview = ({
   const date = formatDateFromMs(lastEditTime)
   return (
     <div
-      className={cn('cursor-pointer px-2.5 py-3 rounded-md transition-colors duration-75', {
-        'bg-[#31363F] text-white': isActive,
-        'hover:bg-gray-400': !isActive
-      })}
+      className={cn(
+        'cursor-pointer px-3 py-2 rounded-md transition-colors duration-100',
+        {
+          'bg-neutral-200 text-neutral-800': isActive,
+          'text-neutral-700 hover:bg-neutral-100': !isActive
+        },
+        className
+      )}
       {...props}
     >
-      <h3 className="mb-1 font-bold truncate">{title}</h3>
-      <span className="inline-block w-full mb-2 text-xs font-light text-left">{date}</span>
+      <h3 className="mb-0.5 font-semibold truncate text-sm">{title}</h3>
+      <span className="inline-block w-full text-xs text-neutral-500 font-normal">{date}</span>
     </div>
   )
 }

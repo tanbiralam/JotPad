@@ -27,11 +27,12 @@ export const getNotes: GetNotes = async () => {
   if (isEmpty(notes)) {
     console.info('No notes found, creating a Welcome Note')
 
+    const welcomeNoteFilename = path.basename(welcomeNoteFile)
     const content = await readFile(welcomeNoteFile, { encoding: fileEncoding })
 
-    await writeFile(`${rootDir}/${welcomeNoteFile}`, content, { encoding: fileEncoding })
+    await writeFile(path.join(rootDir, welcomeNoteFilename), content, { encoding: fileEncoding })
 
-    notes.push(welcomeNoteFile)
+    notes.push(welcomeNoteFilename)
   }
 
   return Promise.all(notes.map(getNoteInfoFromFileName))
@@ -65,7 +66,7 @@ export const createnote: CreateNote = async () => {
 
   const { filePath, canceled } = await dialog.showSaveDialog({
     title: 'Create Note',
-    defaultPath: `${rootDir}\Untitled.md`,
+    defaultPath: path.join(rootDir, 'Untitled.md'),
     buttonLabel: 'Create',
     properties: ['showOverwriteConfirmation'],
     showsTagField: false,

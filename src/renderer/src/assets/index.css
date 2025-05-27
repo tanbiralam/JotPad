@@ -13,7 +13,7 @@
 
         @apply bg-transparent;
 
-        @apply font-mono antialiased text-black;
+        @apply font-sans antialiased text-neutral-800;
         @apply overflow-hidden;
     }
 
@@ -31,7 +31,11 @@
     }
 
     ::-webkit-scrollbar-thumb {
-        @apply bg-[#555]
+        @apply bg-neutral-300 rounded;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        @apply bg-neutral-400;
     }
 
     ::-webkit-scrollbar-track {

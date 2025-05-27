@@ -21,11 +21,11 @@ const App = () => {
     <>
       <DraggableTopBar />
       <RootLayout>
-        <Sidebar className="p-2">
-          <ActionButtonRow className="flex justify-between mt-1" />
+        <Sidebar className="p-3">
+          <ActionButtonRow className="flex justify-end space-x-2 mt-1" />
           <NotePreviewList className="mt-3 space-y-1" onSelect={resetScroll} />
         </Sidebar>
-        <Content className="border-l bg-zinc-900/50 bg-[#222831]" ref={contentContainerRef}>
+        <Content className="bg-white" ref={contentContainerRef}>
           <FloatingNoteTitle className="pt-2" />
           <MDEditor />
         </Content>
