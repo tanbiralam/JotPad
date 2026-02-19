@@ -8,7 +8,6 @@ export type NotePreviewProps = NoteInfo & {
 
 export const NotePreview = ({
   title,
-  content,
   lastEditTime,
   isActive = false,
   className,
@@ -18,17 +17,24 @@ export const NotePreview = ({
   return (
     <div
       className={cn(
-        'cursor-pointer px-3 py-2 rounded-md transition-colors duration-100',
+        'cursor-pointer px-3 py-2.5 rounded-xl transition-all duration-150 group',
         {
-          'bg-neutral-200 text-neutral-800': isActive,
-          'text-neutral-700 hover:bg-neutral-100': !isActive
+          'bg-[var(--color-ios-accent)] text-white shadow-sm': isActive,
+          'text-[var(--color-ios-text)] hover:bg-[var(--color-ios-fill)]': !isActive
         },
         className
       )}
       {...props}
     >
       <h3 className="mb-0.5 font-semibold truncate text-sm">{title}</h3>
-      <span className="inline-block w-full text-xs text-neutral-500 font-normal">{date}</span>
+      <span
+        className={cn('inline-block w-full text-xs font-normal', {
+          'text-white/70': isActive,
+          'text-[var(--color-ios-text-secondary)]': !isActive
+        })}
+      >
+        {date}
+      </span>
     </div>
   )
 }

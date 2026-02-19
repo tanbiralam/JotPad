@@ -12,6 +12,18 @@ const notesAtomAsync = atom<NoteInfo[] | Promise<NoteInfo[]>>(loadNotes())
 
 export const notesAtom = unwrap(notesAtomAsync, (prev) => prev)
 
+export const searchQueryAtom = atom<string>('')
+
+export const filteredNotesAtom = atom((get) => {
+  const notes = get(notesAtom)
+  const query = get(searchQueryAtom).toLowerCase().trim()
+
+  if (!notes) return notes
+  if (!query) return notes
+
+  return notes.filter((note) => note.title.toLowerCase().includes(query))
+})
+
 export const selectedNoteIndexAtom = atom<number | null>(null)
 
 const selectedNoteAtomAsync = atom(async (get) => {
@@ -84,7 +96,7 @@ export const updateNote = atom(null, async (get, set, newContent: NoteContent) =
   set(
     notesAtom,
     notes.map((note) => {
-      if (note.title !== selectedNote.title) {
+      if (note.title === selectedNote.title) {
         return {
           ...note,
           lastEditTime: Date.now()

@@ -7,6 +7,7 @@ import {
   MDEditor,
   NotePreviewList,
   RootLayout,
+  SearchBar,
   Sidebar
 } from './components'
 
@@ -22,11 +23,15 @@ const App = () => {
       <DraggableTopBar />
       <RootLayout>
         <Sidebar className="p-3">
-          <ActionButtonRow className="flex justify-end space-x-2 mt-1" />
-          <NotePreviewList className="mt-3 space-y-1" onSelect={resetScroll} />
+          <ActionButtonRow className="flex justify-between space-x-2 mt-1" />
+          <SearchBar className="mt-3" />
+          <NotePreviewList
+            className="mt-3 space-y-1 flex-1 overflow-y-auto"
+            onSelect={resetScroll}
+          />
         </Sidebar>
-        <Content className="bg-white" ref={contentContainerRef}>
-          <FloatingNoteTitle className="pt-2" />
+        <Content ref={contentContainerRef}>
+          <FloatingNoteTitle />
           <MDEditor />
         </Content>
       </RootLayout>

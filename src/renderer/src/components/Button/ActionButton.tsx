@@ -6,7 +6,9 @@ export const ActionButton = ({ children, className, ...props }: ActionButtonProp
   return (
     <button
       className={twMerge(
-        'flex items-center space-x-1.5 px-2.5 py-1.5 rounded-lg bg-neutral-100 border border-neutral-200 hover:bg-neutral-200/80 transition-colors duration-100 text-sm text-neutral-700',
+        'flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-all duration-150 cursor-pointer',
+        'bg-[var(--color-ios-fill)] hover:bg-[var(--color-ios-separator)]',
+        'text-[var(--color-ios-text)] active:scale-[0.97]',
         className
       )}
       {...props}

@@ -1,44 +1,119 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+@plugin '@tailwindcss/typography';
 
+/* ── iOS-Inspired Design Tokens ── */
+@theme {
+    --font-sans: 'Inter', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI',
+        Roboto, 'Helvetica Neue', Arial, sans-serif;
+
+    --color-ios-bg: #f2f2f7;
+    --color-ios-surface: #ffffff;
+    --color-ios-accent: #007aff;
+    --color-ios-accent-hover: #0066d6;
+    --color-ios-text: #1c1c1e;
+    --color-ios-text-secondary: #8e8e93;
+    --color-ios-separator: #e5e5ea;
+    --color-ios-fill: #e9e9eb;
+    --color-ios-sidebar-active: #007aff;
+    --color-ios-danger: #ff3b30;
+}
+
+/* ── Base Styles ── */
 @layer base {
-    #root {
-        @apply h-full
+    @font-face {
+        font-family: 'Inter';
+        font-style: normal;
+        font-weight: 100 900;
+        font-display: swap;
+        src: url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
     }
 
-    html, body {
+    html,
+    body {
         @apply h-full;
         @apply select-none;
-
         @apply bg-transparent;
-
-        @apply font-sans antialiased text-neutral-800;
         @apply overflow-hidden;
+        font-family: var(--font-sans);
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        color: var(--color-ios-text);
     }
 
-    /* For draggable windows for only mac and linux */
-    /* header {
-        -webkit-app-region: drag;
+    #root {
+        @apply h-full;
     }
 
-    button {
-        -webkit-app-region: no-drag;
-    } */
-
+    /* ── iOS-Style Scrollbar ── */
     ::-webkit-scrollbar {
-        @apply w-2;
+        width: 6px;
     }
 
     ::-webkit-scrollbar-thumb {
-        @apply bg-neutral-300 rounded;
+        background: rgba(0, 0, 0, 0.15);
+        border-radius: 10px;
     }
 
     ::-webkit-scrollbar-thumb:hover {
-        @apply bg-neutral-400;
+        background: rgba(0, 0, 0, 0.25);
     }
 
     ::-webkit-scrollbar-track {
-        @apply bg-transparent
+        background: transparent;
     }
+}
+
+/* ── MDXEditor Toolbar Overrides ── */
+[class*='_toolbarRoot_'] {
+    background: var(--color-ios-surface) !important;
+    border-bottom: 1px solid var(--color-ios-separator) !important;
+    border-radius: 0 !important;
+    padding: 4px 8px !important;
+    min-height: 40px !important;
+    position: sticky !important;
+    top: 0 !important;
+    z-index: 10 !important;
+    backdrop-filter: blur(20px) !important;
+    -webkit-backdrop-filter: blur(20px) !important;
+}
+
+[class*='_toolbarRoot_'] button {
+    border-radius: 6px !important;
+    padding: 4px 6px !important;
+    min-width: 28px !important;
+    min-height: 28px !important;
+    transition: all 0.15s ease !important;
+    color: var(--color-ios-text) !important;
+}
+
+[class*='_toolbarRoot_'] button:hover {
+    background: var(--color-ios-fill) !important;
+}
+
+[class*='_toolbarRoot_'] button[data-state='on'],
+[class*='_toolbarRoot_'] button[aria-pressed='true'] {
+    background: var(--color-ios-accent) !important;
+    color: white !important;
+}
+
+[class*='_toolbarRoot_'] [class*='_selectTrigger_'] {
+    border-radius: 6px !important;
+    padding: 4px 8px !important;
+    font-size: 13px !important;
+    border: 1px solid var(--color-ios-separator) !important;
+    transition: all 0.15s ease !important;
+}
+
+[class*='_toolbarRoot_'] [class*='_selectTrigger_']:hover {
+    background: var(--color-ios-fill) !important;
+}
+
+[class*='_toolbarRoot_'] [class*='_separator_'] {
+    background: var(--color-ios-separator) !important;
+    margin: 0 6px !important;
+}
+
+/* ── MDXEditor Content Overrides ── */
+[class*='_contentEditable_'] {
+    font-family: var(--font-sans) !important;
 }
