@@ -1,6 +1,6 @@
 import { cn, formatDateFromMs } from '@renderer/utils'
 import { NoteInfo } from '@shared/models'
-import { ComponentProps, useState } from 'react'
+import { ComponentProps, useRef, useState } from 'react'
 import { LuMoreHorizontal } from 'react-icons/lu'
 import { NoteContextMenu } from './NoteContextMenu'
 
@@ -27,6 +27,7 @@ export const NotePreview = ({
   const [isEditing, setIsEditing] = useState(false)
   const [editedTitle, setEditedTitle] = useState(title)
   const [showMenu, setShowMenu] = useState(false)
+  const menuButtonRef = useRef<HTMLButtonElement>(null)
 
   const handleRename = () => {
     if (editedTitle.trim() && editedTitle !== title && onRename) {
@@ -81,6 +82,7 @@ export const NotePreview = ({
         <div className="flex items-center gap-1.5">
           {/* Three-dot menu button */}
           <button
+            ref={menuButtonRef}
             className={cn(
               'p-1 rounded-md transition-all duration-200 hover:bg-black/5 dark:hover:bg-white/10',
               isActive ? 'text-white/80 hover:text-white' : 'text-zinc-400 hover:text-zinc-600',
@@ -122,6 +124,7 @@ export const NotePreview = ({
         onTogglePin={() => onTogglePin?.()}
         onRename={() => setIsEditing(true)}
         onDelete={() => onDelete?.()}
+        anchorRef={menuButtonRef}
       />
     </div>
   )
