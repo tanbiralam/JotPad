@@ -44,8 +44,8 @@ export const NotePreview = ({
       className={cn(
         'cursor-pointer px-3 py-2.5 rounded-xl transition-all duration-150 group relative',
         {
-          'bg-[var(--ios-accent)] text-white shadow-sm': isActive,
-          'text-[var(--ios-text)] hover:bg-[var(--ios-fill)]': !isActive
+          'bg-(--ios-accent) text-white shadow-sm': isActive,
+          'text-(--ios-text) hover:bg-(--ios-fill)': !isActive
         },
         className
       )}
@@ -66,7 +66,7 @@ export const NotePreview = ({
               }
             }}
             onClick={(e) => e.stopPropagation()}
-            className="flex-1 bg-transparent outline-none font-semibold text-sm min-w-0 text-[var(--ios-text)]"
+            className="flex-1 bg-transparent outline-none font-semibold text-sm min-w-0 text-(--ios-text)"
           />
         ) : (
           <h3
@@ -100,7 +100,7 @@ export const NotePreview = ({
           <span
             className={cn('text-[10px] font-semibold px-1.5 py-0.5 rounded-md uppercase shrink-0', {
               'bg-white/20 text-white': isActive,
-              'bg-[var(--ios-fill)] text-[var(--ios-text-secondary)]': !isActive
+              'bg-(--ios-fill) text-(--ios-text-secondary)': !isActive
             })}
           >
             {ext.replace('.', '')}
@@ -110,7 +110,7 @@ export const NotePreview = ({
       <span
         className={cn('inline-block w-full text-xs font-normal', {
           'text-white/70': isActive,
-          'text-[var(--ios-text-secondary)]': !isActive
+          'text-(--ios-text-secondary)': !isActive
         })}
       >
         {date}

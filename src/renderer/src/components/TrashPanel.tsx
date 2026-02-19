@@ -64,7 +64,7 @@ export const TrashPanel = ({ isOpen, onClose, onRestored }: TrashPanelProps) => 
       onClick={onClose}
     >
       <div
-        className="w-[420px] max-h-[500px] rounded-2xl overflow-hidden flex flex-col animate-[modalIn_0.2s_ease-out]"
+        className="w-105 max-h-125 rounded-2xl overflow-hidden flex flex-col animate-[modalIn_0.2s_ease-out]"
         style={{
           backgroundColor: 'var(--ios-surface)',
           border: '1px solid var(--ios-separator)',
