@@ -213,20 +213,88 @@
 }
 
 /* ══════════════════════════════════════════
-   Dark Mode — Popups & Dialogs
+   Popups, Dialogs & Link Editor
    ══════════════════════════════════════════ */
-.dark [class*='_dialogContent_'] {
+
+/* Link dialog popover + general popovers */
+[class*='_linkDialogPopoverContent_'],
+[class*='_popoverContent_'],
+[class*='_dialogContent_'] {
+    z-index: 50 !important;
     background: var(--ios-surface) !important;
     color: var(--ios-text) !important;
-    border-color: var(--ios-separator) !important;
+    border: 1px solid var(--ios-separator) !important;
+    border-radius: 12px !important;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12) !important;
+    padding: 8px 12px !important;
+    font-size: 13px !important;
 }
 
-.dark [class*='_dialogContent_'] input {
+.dark [class*='_linkDialogPopoverContent_'],
+.dark [class*='_popoverContent_'],
+.dark [class*='_dialogContent_'] {
+    background: var(--ios-fill) !important;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5) !important;
+}
+
+/* Link dialog input */
+[class*='_linkDialogInput_'],
+[class*='_dialogInput_'] {
     background: var(--ios-fill) !important;
     color: var(--ios-text) !important;
-    border-color: var(--ios-separator) !important;
+    border: 1px solid var(--ios-separator) !important;
+    border-radius: 8px !important;
+    padding: 6px 10px !important;
+    font-size: 13px !important;
 }
 
+[class*='_linkDialogInputWrapper_'] {
+    background: var(--ios-fill) !important;
+    border: 1px solid var(--ios-separator) !important;
+    border-radius: 8px !important;
+}
+
+/* Link dialog buttons */
+[class*='_primaryButton_'],
+[class*='_secondaryButton_'] {
+    border-radius: 8px !important;
+    padding: 6px 14px !important;
+    font-size: 12px !important;
+    font-weight: 600 !important;
+    cursor: pointer !important;
+}
+
+[class*='_primaryButton_'] {
+    background: var(--ios-accent) !important;
+    color: white !important;
+    border: none !important;
+}
+
+[class*='_primaryButton_']:hover {
+    background: var(--ios-accent-hover) !important;
+}
+
+/* Link preview anchor */
+[class*='_linkDialogPreviewAnchor_'] {
+    color: var(--ios-accent) !important;
+}
+
+/* Icon buttons in dialogs */
+[class*='_iconButton_'] {
+    color: var(--ios-text) !important;
+}
+
+[class*='_iconButton_']:hover {
+    color: var(--ios-accent) !important;
+}
+
+/* Dialog overlay */
+[class*='_dialogOverlay_'] {
+    background: rgba(0, 0, 0, 0.4) !important;
+    backdrop-filter: blur(4px) !important;
+}
+
+/* Popup container z-index */
 [class*='_popupContainer_'] {
     z-index: 50 !important;
 }

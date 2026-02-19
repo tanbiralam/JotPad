@@ -107,20 +107,6 @@ export const createnote: CreateNote = async () => {
 export const deletenote: DeleteNote = async (filename, ext) => {
   const rootDir = getRootDir()
 
-  const { response } = await dialog.showMessageBox({
-    type: 'warning',
-    title: 'Delete Note',
-    message: `Are you sure you want to delete ${filename}`,
-    buttons: ['Delete', 'Cancel'], // 0: Delete, 1: Cancel
-    defaultId: 1,
-    cancelId: 1
-  })
-
-  if (response === 1) {
-    console.info('Note Deletion Aborted')
-    return false
-  }
-
   console.info(`Deleting Note ${filename}`)
 
   await remove(`${rootDir}/${filename}${ext}`)

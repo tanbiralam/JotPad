@@ -49,6 +49,9 @@ function createWindow(): void {
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
+// Suppress GPU shader disk cache errors (Chromium cache lock conflicts during dev)
+app.commandLine.appendSwitch('disable-gpu-shader-disk-cache')
+
 app.whenReady().then(() => {
   // Set app user model id for windows
   electronApp.setAppUserModelId('com.electron')
