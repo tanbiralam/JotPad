@@ -1,8 +1,7 @@
 import { createnote, deletenote, getNotes, readNote, renameNote, writeNote } from '@/lib'
-import { electronApp, is, optimizer } from '@electron-toolkit/utils'
+import { electronApp, optimizer } from '@electron-toolkit/utils'
 import { CreateNote, DeleteNote, GetNotes, ReadNote, RenameNote, WriteNote } from '@shared/types'
-import { BrowserWindow, app, dialog, ipcMain, shell } from 'electron'
-import { writeFile } from 'fs-extra'
+import { BrowserWindow, app, ipcMain, shell } from 'electron'
 import { join } from 'path'
 import icon from '../../resources/icon.png?asset'
 
@@ -39,8 +38,8 @@ function createWindow(): void {
   })
 
   // HMR for renderer base on electron-vite cli.
-  // Load the remote URL for development or the local html file for production.
-  if (is.dev && process.env['ELECTRON_RENDERER_URL']) {
+  // if (is.dev && process.env['ELECTRON_RENDERER_URL']) {
+  if (process.env['ELECTRON_RENDERER_URL']) {
     mainWindow.loadURL(process.env['ELECTRON_RENDERER_URL'])
   } else {
     mainWindow.loadFile(join(__dirname, '../renderer/index.html'))
@@ -73,26 +72,6 @@ app.whenReady().then(() => {
   ipcMain.handle('createnote', (_, ...args: Parameters<CreateNote>) => createnote(...args))
   ipcMain.handle('deletenote', (_, ...args: Parameters<DeleteNote>) => deletenote(...args))
   ipcMain.handle('renameNote', (_, ...args: Parameters<RenameNote>) => renameNote(...args))
-  ipcMain.handle('exportNote', async () => {
-    const mainWindow = BrowserWindow.getFocusedWindow()
-    if (!mainWindow) return false
-
-    const { filePath, canceled } = await dialog.showSaveDialog(mainWindow, {
-      title: 'Export to PDF',
-      defaultPath: 'note.pdf',
-      filters: [{ name: 'PDF', extensions: ['pdf'] }]
-    })
-
-    if (canceled || !filePath) return false
-
-    const pdfData = await mainWindow.webContents.printToPDF({
-      printBackground: true,
-      pageSize: 'A4'
-    })
-
-    await writeFile(filePath, pdfData)
-    return true
-  })
 
   createWindow()
 

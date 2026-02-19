@@ -1,5 +1,5 @@
 import { useNotesList } from '@renderer/hooks/useNotesList'
-import { pinnedNotesAtom, togglePinNote } from '@renderer/store'
+import { pinnedNotesAtom, renameNote, togglePinNote } from '@renderer/store'
 import { useAtomValue, useSetAtom } from 'jotai'
 import { isEmpty } from 'lodash'
 import { ComponentProps } from 'react'

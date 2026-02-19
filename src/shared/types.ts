@@ -14,4 +14,3 @@ export type RenameNote = (
   newTitle: NoteInfo['title'],
   ext: NoteInfo['ext']
 ) => Promise<boolean>
-export type ExportNote = () => Promise<boolean>
