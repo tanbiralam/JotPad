@@ -86,9 +86,8 @@
     margin: 10px 16px 4px !important;
     padding: 6px 10px !important;
     min-height: 42px !important;
-    position: sticky !important;
-    top: 0 !important;
-    z-index: 10 !important;
+    position: relative !important;
+    z-index: 1 !important;
     box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08), 0 1px 3px rgba(0, 0, 0, 0.06) !important;
 }
 
@@ -230,4 +229,27 @@
 
 [class*='_popupContainer_'] {
     z-index: 50 !important;
+}
+
+/* ── Toolbar Tooltips — force below toolbar ── */
+[class*='_tooltipContent_'] {
+    z-index: 50 !important;
+    background: var(--ios-surface) !important;
+    color: var(--ios-text) !important;
+    border: 1px solid var(--ios-separator) !important;
+    border-radius: 8px !important;
+    padding: 4px 10px !important;
+    font-size: 12px !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
+    --radix-tooltip-content-transform-origin: top center !important;
+}
+
+.dark [class*='_tooltipContent_'] {
+    background: var(--ios-fill) !important;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4) !important;
+}
+
+/* Hide the tooltip arrow (points wrong direction) */
+[class*='_tooltipContent_'] svg {
+    display: none !important;
 }

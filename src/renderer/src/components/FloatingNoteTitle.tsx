@@ -10,7 +10,7 @@ export const FloatingNoteTitle = ({ className, ...props }: ComponentProps<'div'>
 
   return (
     <div
-      className={twMerge('flex justify-center py-3 sticky top-0 z-5', className)}
+      className={twMerge('flex justify-center py-3 sticky top-0 z-20', className)}
       style={{
         backgroundColor: 'var(--ios-surface)',
         borderBottom: '1px solid var(--ios-separator)',
