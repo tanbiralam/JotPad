@@ -1,19 +1,25 @@
 import {
   BoldItalicUnderlineToggles,
+  codeBlockPlugin,
+  codeMirrorPlugin,
   CreateLink,
-  InsertThematicBreak,
-  ListsToggle,
-  MDXEditor,
-  Separator,
-  UndoRedo,
+  diffSourcePlugin,
+  DiffSourceToggleWrapper,
   headingsPlugin,
+  InsertCodeBlock,
+  InsertThematicBreak,
+  jsxPlugin,
   linkDialogPlugin,
   linkPlugin,
   listsPlugin,
+  ListsToggle,
   markdownShortcutPlugin,
+  MDXEditor,
   quotePlugin,
+  Separator,
   thematicBreakPlugin,
-  toolbarPlugin
+  toolbarPlugin,
+  UndoRedo
 } from '@mdxeditor/editor'
 import { useMD } from '@renderer/hooks/useMD'
 
@@ -56,15 +62,31 @@ export const MDEditor = () => {
       onBlur={handleBlur}
       plugins={[
         headingsPlugin(),
+        jsxPlugin(),
         listsPlugin(),
         quotePlugin(),
         linkPlugin(),
         linkDialogPlugin(),
         thematicBreakPlugin(),
         markdownShortcutPlugin(),
+        codeBlockPlugin({ defaultCodeBlockLanguage: 'js' }),
+        codeMirrorPlugin({
+          codeBlockLanguages: {
+            js: 'JavaScript',
+            ts: 'TypeScript',
+            tsx: 'TypeScript (React)',
+            jsx: 'JavaScript (React)',
+            css: 'CSS',
+            html: 'HTML',
+            json: 'JSON',
+            python: 'Python',
+            markdown: 'Markdown'
+          }
+        }),
+        diffSourcePlugin({ viewMode: 'rich-text', diffMarkdown: undefined }),
         toolbarPlugin({
           toolbarContents: () => (
-            <>
+            <DiffSourceToggleWrapper>
               <UndoRedo />
               <Separator />
               <BoldItalicUnderlineToggles />
@@ -72,8 +94,9 @@ export const MDEditor = () => {
               <ListsToggle />
               <Separator />
               <CreateLink />
+              <InsertCodeBlock />
               <InsertThematicBreak />
-            </>
+            </DiffSourceToggleWrapper>
           )
         })
       ]}

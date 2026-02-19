@@ -1,11 +1,12 @@
 import { ComponentProps } from 'react'
-import { AddNote, DeleteNote } from './Button'
+import { AddNote, DeleteNote, ExportNoteButton } from './Button'
 
 export const ActionButtonRow = ({ ...props }: ComponentProps<'div'>) => {
   return (
-    <div {...props}>
+    <div className={`action-buttons ${props.className || ''}`} {...props}>
       <AddNote />
       <DeleteNote />
+      <ExportNoteButton />
     </div>
   )
 }

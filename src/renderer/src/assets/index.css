@@ -321,3 +321,33 @@
 [class*='_tooltipContent_'] svg {
     display: none !important;
 }
+
+@media print {
+
+    aside,
+    .draggable-top-bar,
+    .status-bar,
+    .action-buttons,
+    [class*='_toolbarRoot_'] {
+        display: none !important;
+    }
+
+    ::-webkit-scrollbar {
+        display: none !important;
+    }
+
+    body,
+    #root,
+    .content-container {
+        background: white !important;
+        height: auto !important;
+        overflow: visible !important;
+    }
+
+    .content-container {
+        margin: 0 !important;
+        padding: 0 !important;
+        width: 100% !important;
+        border: none !important;
+    }
+}

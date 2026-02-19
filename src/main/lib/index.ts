@@ -1,8 +1,8 @@
 import { appDirName, fileEncoding, supportedExtensions } from '@shared/constants'
 import { NoteInfo } from '@shared/models'
-import { CreateNote, DeleteNote, GetNotes, ReadNote, WriteNote } from '@shared/types'
+import { CreateNote, DeleteNote, GetNotes, ReadNote, RenameNote, WriteNote } from '@shared/types'
 import { dialog } from 'electron'
-import { ensureDir, readFile, readdir, remove, stat, writeFile } from 'fs-extra'
+import { ensureDir, pathExists, readFile, readdir, remove, rename, stat, writeFile } from 'fs-extra'
 import { isEmpty } from 'lodash'
 import { homedir } from 'os'
 import path from 'path'
@@ -110,5 +110,20 @@ export const deletenote: DeleteNote = async (filename, ext) => {
   console.info(`Deleting Note ${filename}`)
 
   await remove(`${rootDir}/${filename}${ext}`)
+  return true
+}
+
+export const renameNote: RenameNote = async (oldTitle, newTitle, ext) => {
+  const rootDir = getRootDir()
+  const oldPath = `${rootDir}/${oldTitle}${ext}`
+  const newPath = `${rootDir}/${newTitle}${ext}`
+
+  if (await pathExists(newPath)) {
+    console.warn(`Rename failed: ${newTitle} already exists`)
+    return false
+  }
+
+  console.info(`Renaming note: ${oldTitle} -> ${newTitle}`)
+  await rename(oldPath, newPath)
   return true
 }

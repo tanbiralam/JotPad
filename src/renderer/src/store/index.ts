@@ -1,6 +1,6 @@
 import { NoteContent, NoteInfo } from '@shared/models'
 import { atom } from 'jotai'
-import { unwrap } from 'jotai/utils'
+import { atomWithStorage, unwrap } from 'jotai/utils'
 
 // ── Theme ──
 export type ThemeMode = 'light' | 'dark' | 'system'
@@ -26,14 +26,25 @@ export const notesAtom = unwrap(notesAtomAsync, (prev) => prev)
 
 export const searchQueryAtom = atom<string>('')
 
+export const pinnedNotesAtom = atomWithStorage<string[]>('jotpad-pinned-notes', [])
+
 export const filteredNotesAtom = atom((get) => {
   const notes = get(notesAtom)
+  const pinned = get(pinnedNotesAtom)
   const query = get(searchQueryAtom).toLowerCase().trim()
 
-  if (!notes) return notes
-  if (!query) return notes
+  if (!notes) return []
 
-  return notes.filter((note) => note.title.toLowerCase().includes(query))
+  const filtered = !query ? notes : notes.filter((note) => note.title.toLowerCase().includes(query))
+
+  return filtered.sort((a, b) => {
+    const isAPinned = pinned.includes(a.title)
+    const isBPinned = pinned.includes(b.title)
+
+    if (isAPinned && !isBPinned) return -1
+    if (!isAPinned && isBPinned) return 1
+    return b.lastEditTime - a.lastEditTime
+  })
 })
 
 export const selectedNoteIndexAtom = atom<number | null>(null)
@@ -120,3 +131,52 @@ export const updateNote = atom(null, async (get, set, newContent: NoteContent) =
     })
   )
 })
+
+export const togglePinNote = atom(null, (get, set, title: string) => {
+  const pinned = get(pinnedNotesAtom)
+  if (pinned.includes(title)) {
+    set(
+      pinnedNotesAtom,
+      pinned.filter((t) => t !== title)
+    )
+  } else {
+    set(pinnedNotesAtom, [...pinned, title])
+  }
+})
+
+export const renameNote = atom(
+  null,
+  async (get, set, { oldTitle, newTitle }: { oldTitle: string; newTitle: string }) => {
+    const notes = get(notesAtom)
+    if (!notes) return
+
+    const note = notes.find((n) => n.title === oldTitle)
+    if (!note) return
+
+    const success = await window.context.renameNote(oldTitle, newTitle, note.ext)
+    if (success) {
+      set(
+        notesAtom,
+        notes.map((n) => {
+          if (n.title === oldTitle) {
+            return { ...n, title: newTitle, lastEditTime: Date.now() }
+          }
+          return n
+        })
+      )
+
+      const pinned = get(pinnedNotesAtom)
+      if (pinned.includes(oldTitle)) {
+        set(
+          pinnedNotesAtom,
+          pinned.map((t) => (t === oldTitle ? newTitle : t))
+        )
+      }
+
+      const selectedNote = get(selectedNoteAtom)
+      if (selectedNote?.title === oldTitle) {
+        set(selectedNoteIndexAtom, 0)
+      }
+    }
+  }
+)

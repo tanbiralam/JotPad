@@ -1,4 +1,6 @@
 import { useNotesList } from '@renderer/hooks/useNotesList'
+import { pinnedNotesAtom, togglePinNote } from '@renderer/store'
+import { useAtomValue, useSetAtom } from 'jotai'
 import { isEmpty } from 'lodash'
 import { ComponentProps } from 'react'
 import { twMerge } from 'tailwind-merge'
@@ -10,6 +12,9 @@ export type NotePreviewListProps = ComponentProps<'ul'> & {
 
 export const NotePreviewList = ({ onSelect, className, ...props }: NotePreviewListProps) => {
   const { notes, selectedNoteIndex, handleNoteSelect } = useNotesList({ onSelect })
+  const pinnedNotes = useAtomValue(pinnedNotesAtom)
+  const togglePin = useSetAtom(togglePinNote)
+  const rename = useSetAtom(renameNote)
 
   if (!notes) return null
 
@@ -29,6 +34,14 @@ export const NotePreviewList = ({ onSelect, className, ...props }: NotePreviewLi
           key={note.title + note.lastEditTime}
           isActive={selectedNoteIndex === index}
           onClick={handleNoteSelect(index)}
+          isPinned={pinnedNotes.includes(note.title)}
+          onTogglePin={(e) => {
+            e.stopPropagation()
+            togglePin(note.title)
+          }}
+          onRename={async (newTitle) => {
+            await rename({ oldTitle: note.title, newTitle })
+          }}
           {...note}
         />
       ))}

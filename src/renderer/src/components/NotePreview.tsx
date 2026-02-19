@@ -1,9 +1,13 @@
 import { cn, formatDateFromMs } from '@renderer/utils'
 import { NoteInfo } from '@shared/models'
-import { ComponentProps } from 'react'
+import { ComponentProps, useState } from 'react'
+import { LuPin, LuPinOff } from 'react-icons/lu'
 
 export type NotePreviewProps = NoteInfo & {
   isActive?: boolean
+  isPinned?: boolean
+  onTogglePin?: (e: React.MouseEvent) => void
+  onRename?: (newTitle: string) => void
 } & ComponentProps<'div'>
 
 export const NotePreview = ({
@@ -11,9 +15,24 @@ export const NotePreview = ({
   lastEditTime,
   ext,
   isActive = false,
+  isPinned = false,
+  onTogglePin,
+  onRename,
   className,
   ...props
 }: NotePreviewProps) => {
+  const [isEditing, setIsEditing] = useState(false)
+  const [editedTitle, setEditedTitle] = useState(title)
+
+  const handleRename = () => {
+    if (editedTitle.trim() && editedTitle !== title && onRename) {
+      onRename(editedTitle)
+    } else {
+      setEditedTitle(title)
+    }
+    setIsEditing(false)
+  }
+
   const date = formatDateFromMs(lastEditTime)
   return (
     <div
@@ -28,18 +47,56 @@ export const NotePreview = ({
       {...props}
     >
       <div className="flex items-center justify-between mb-0.5">
-        <h3 className="font-semibold truncate text-sm flex-1">{title}</h3>
-        <span
-          className={cn(
-            'text-[10px] font-semibold px-1.5 py-0.5 rounded-md ml-2 uppercase shrink-0',
-            {
+        {isEditing ? (
+          <input
+            autoFocus
+            value={editedTitle}
+            onChange={(e) => setEditedTitle(e.target.value)}
+            onBlur={handleRename}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') handleRename()
+              if (e.key === 'Escape') {
+                setEditedTitle(title)
+                setIsEditing(false)
+              }
+            }}
+            onClick={(e) => e.stopPropagation()}
+            className="flex-1 bg-transparent outline-none font-semibold text-sm min-w-0 text-[var(--ios-text)]"
+          />
+        ) : (
+          <h3
+            className="font-semibold truncate text-sm flex-1"
+            onDoubleClick={(e) => {
+              e.stopPropagation()
+              setIsEditing(true)
+            }}
+          >
+            {title}
+          </h3>
+        )}
+        <div className="flex items-center gap-2">
+          {onTogglePin && (
+            <button
+              className={cn(
+                'p-1 rounded-md transition-all duration-200 hover:bg-black/5 dark:hover:bg-white/10',
+                isActive ? 'text-white/80 hover:text-white' : 'text-zinc-400 hover:text-zinc-600',
+                !isPinned && 'opacity-0 group-hover:opacity-100'
+              )}
+              onClick={onTogglePin}
+              title={isPinned ? 'Unpin note' : 'Pin note'}
+            >
+              {isPinned ? <LuPinOff className="w-3 h-3" /> : <LuPin className="w-3 h-3" />}
+            </button>
+          )}
+          <span
+            className={cn('text-[10px] font-semibold px-1.5 py-0.5 rounded-md uppercase shrink-0', {
               'bg-white/20 text-white': isActive,
               'bg-[var(--ios-fill)] text-[var(--ios-text-secondary)]': !isActive
-            }
-          )}
-        >
-          {ext.replace('.', '')}
-        </span>
+            })}
+          >
+            {ext.replace('.', '')}
+          </span>
+        </div>
       </div>
       <span
         className={cn('inline-block w-full text-xs font-normal', {

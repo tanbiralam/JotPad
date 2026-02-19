@@ -1,7 +1,8 @@
-import { createnote, deletenote, getNotes, readNote, writeNote } from '@/lib'
+import { createnote, deletenote, getNotes, readNote, renameNote, writeNote } from '@/lib'
 import { electronApp, is, optimizer } from '@electron-toolkit/utils'
-import { CreateNote, DeleteNote, GetNotes, ReadNote, WriteNote } from '@shared/types'
-import { BrowserWindow, app, ipcMain, shell } from 'electron'
+import { CreateNote, DeleteNote, GetNotes, ReadNote, RenameNote, WriteNote } from '@shared/types'
+import { BrowserWindow, app, dialog, ipcMain, shell } from 'electron'
+import { writeFile } from 'fs-extra'
 import { join } from 'path'
 import icon from '../../resources/icon.png?asset'
 
@@ -71,6 +72,27 @@ app.whenReady().then(() => {
   ipcMain.handle('writeNote', (_, ...args: Parameters<WriteNote>) => writeNote(...args))
   ipcMain.handle('createnote', (_, ...args: Parameters<CreateNote>) => createnote(...args))
   ipcMain.handle('deletenote', (_, ...args: Parameters<DeleteNote>) => deletenote(...args))
+  ipcMain.handle('renameNote', (_, ...args: Parameters<RenameNote>) => renameNote(...args))
+  ipcMain.handle('exportNote', async () => {
+    const mainWindow = BrowserWindow.getFocusedWindow()
+    if (!mainWindow) return false
+
+    const { filePath, canceled } = await dialog.showSaveDialog(mainWindow, {
+      title: 'Export to PDF',
+      defaultPath: 'note.pdf',
+      filters: [{ name: 'PDF', extensions: ['pdf'] }]
+    })
+
+    if (canceled || !filePath) return false
+
+    const pdfData = await mainWindow.webContents.printToPDF({
+      printBackground: true,
+      pageSize: 'A4'
+    })
+
+    await writeFile(filePath, pdfData)
+    return true
+  })
 
   createWindow()
 
