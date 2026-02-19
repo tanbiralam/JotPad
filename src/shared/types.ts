@@ -7,7 +7,7 @@ export type WriteNote = (
   ext: NoteInfo['ext'],
   content: NoteContent
 ) => Promise<void>
-export type CreateNote = () => Promise<NoteInfo['title'] | false>
+export type CreateNote = () => Promise<{ title: NoteInfo['title']; ext: NoteInfo['ext'] } | false>
 export type DeleteNote = (title: NoteInfo['title'], ext: NoteInfo['ext']) => Promise<boolean>
 export type RenameNote = (
   oldTitle: NoteInfo['title'],

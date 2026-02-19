@@ -77,14 +77,14 @@ export const createNote = atom(null, async (get, set) => {
 
   if (!notes) return
 
-  const title = await window.context.createnote()
+  const result = await window.context.createnote()
 
-  if (!title) return
+  if (!result) return
 
   const newNote: NoteInfo = {
-    title,
+    title: result.title,
     lastEditTime: Date.now(),
-    ext: '.md'
+    ext: result.ext
   }
 
   set(notesAtom, [newNote, ...notes.filter((note) => note.title !== newNote.title)])

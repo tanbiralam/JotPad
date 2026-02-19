@@ -85,7 +85,7 @@ export const createnote: CreateNote = async () => {
     return false
   }
 
-  const { name: filename, dir: parentDir } = path.parse(filePath)
+  const { name: filename, dir: parentDir, ext } = path.parse(filePath)
 
   if (parentDir !== rootDir) {
     await dialog.showMessageBox({
@@ -101,7 +101,7 @@ export const createnote: CreateNote = async () => {
 
   await writeFile(filePath, '')
 
-  return filename
+  return { title: filename, ext }
 }
 
 export const deletenote: DeleteNote = async (filename, ext) => {
