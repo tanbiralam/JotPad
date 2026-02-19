@@ -1,11 +1,11 @@
 import {
-  BlockTypeSelect,
   BoldItalicUnderlineToggles,
   CreateLink,
   InsertThematicBreak,
   ListsToggle,
   MDXEditor,
   Separator,
+  UndoRedo,
   headingsPlugin,
   linkDialogPlugin,
   linkPlugin,
@@ -16,9 +16,12 @@ import {
   toolbarPlugin
 } from '@mdxeditor/editor'
 import { useMD } from '@renderer/hooks/useMD'
+import { resolvedThemeAtom } from '@renderer/store'
+import { useAtomValue } from 'jotai'
 
 export const MDEditor = () => {
   const { editorRef, selectedNote, handleAutoSaving, handleBlur } = useMD()
+  const resolvedTheme = useAtomValue(resolvedThemeAtom)
 
   if (!selectedNote) return null
 
@@ -54,6 +57,7 @@ export const MDEditor = () => {
       markdown={selectedNote.content}
       onChange={handleAutoSaving}
       onBlur={handleBlur}
+      className={resolvedTheme === 'dark' ? 'dark-theme' : ''}
       plugins={[
         headingsPlugin(),
         listsPlugin(),
@@ -65,7 +69,7 @@ export const MDEditor = () => {
         toolbarPlugin({
           toolbarContents: () => (
             <>
-              <BlockTypeSelect />
+              <UndoRedo />
               <Separator />
               <BoldItalicUnderlineToggles />
               <Separator />

@@ -49,7 +49,6 @@
         @apply h-full;
     }
 
-    /* ── Scrollbar ── */
     ::-webkit-scrollbar {
         width: 6px;
     }
@@ -68,18 +67,27 @@
     }
 }
 
-/* ── Floating Toolbar ── */
+/* ══════════════════════════════════════════
+   MDXEditor v2.5.1 — Toolbar (Floating, Horizontal)
+   ══════════════════════════════════════════ */
+
+/* Root toolbar container */
 [class*='_toolbarRoot_'] {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: wrap !important;
+    align-items: center !important;
+    gap: 2px !important;
     background: color-mix(in srgb, var(--ios-surface) 80%, transparent) !important;
     backdrop-filter: blur(20px) !important;
     -webkit-backdrop-filter: blur(20px) !important;
     border: 1px solid var(--ios-separator) !important;
     border-radius: 14px !important;
     margin: 10px 16px 4px !important;
-    padding: 4px 8px !important;
-    min-height: 40px !important;
+    padding: 6px 10px !important;
+    min-height: 42px !important;
     position: sticky !important;
-    top: 8px !important;
+    top: 0 !important;
     z-index: 10 !important;
     box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08), 0 1px 3px rgba(0, 0, 0, 0.06) !important;
 }
@@ -88,7 +96,23 @@
     box-shadow: 0 2px 16px rgba(0, 0, 0, 0.4), 0 1px 4px rgba(0, 0, 0, 0.3) !important;
 }
 
+/* EVERY child inside the toolbar MUST be horizontal */
+[class*='_toolbarRoot_']>*,
+[class*='_toolbarRoot_'] [role='toolbar'],
+[class*='_toolbarRoot_'] [class*='_toggleGroupRoot_'],
+[class*='_toolbarRoot_'] div {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    gap: 2px !important;
+    flex-wrap: nowrap !important;
+}
+
+/* Toolbar buttons */
 [class*='_toolbarRoot_'] button {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
     border-radius: 8px !important;
     padding: 4px 7px !important;
     min-width: 28px !important;
@@ -107,34 +131,92 @@
     color: white !important;
 }
 
-[class*='_toolbarRoot_'] [class*='_selectTrigger_'] {
-    border-radius: 8px !important;
-    padding: 4px 8px !important;
-    font-size: 13px !important;
-    border: 1px solid var(--ios-separator) !important;
-    background: var(--ios-fill) !important;
-    color: var(--ios-text) !important;
-    transition: all 0.15s ease !important;
-}
-
-[class*='_toolbarRoot_'] [class*='_selectTrigger_']:hover {
-    background: var(--ios-separator) !important;
-}
-
+/* Toolbar separators — thin vertical dividers */
+[class*='_toolbarRoot_'] [class*='_toolbarSeparator_'],
 [class*='_toolbarRoot_'] [class*='_separator_'] {
+    display: block !important;
+    width: 1px !important;
+    height: 20px !important;
+    min-height: 20px !important;
     background: var(--ios-separator) !important;
     margin: 0 6px !important;
+    flex-shrink: 0 !important;
+    border: none !important;
 }
 
-/* ── MDXEditor Content ── */
+/* ══════════════════════════════════════════
+   MDXEditor — Editor Root & Content
+   ══════════════════════════════════════════ */
+
+/* Editor root container */
+[class*='_editorRoot_'] {
+    background: var(--ios-surface) !important;
+    color: var(--ios-text) !important;
+}
+
+/* Editor content area */
 [class*='_contentEditable_'] {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
     color: var(--ios-text) !important;
 }
 
-/* ── MDXEditor Dialog Overrides (dark mode) ── */
-.dark [class*='_dialogContent_'],
-.dark [class*='_dialogOverlay_'] {
+/* ══════════════════════════════════════════
+   Dark Mode — Editor Content Text
+   ══════════════════════════════════════════ */
+
+/* Force ALL text white in dark mode */
+.dark [class*='_editorRoot_'] {
+    --baseText: var(--ios-text) !important;
+    --baseTextContrast: #ffffff !important;
+    --baseBg: var(--ios-fill) !important;
+    --baseBorder: var(--ios-separator) !important;
+    --accentSolid: var(--ios-accent) !important;
+    --accentText: var(--ios-accent) !important;
+    --basePageBg: var(--ios-surface) !important;
+}
+
+.dark [class*='_contentEditable_'],
+.dark [class*='_contentEditable_'] p,
+.dark [class*='_contentEditable_'] li,
+.dark [class*='_contentEditable_'] span,
+.dark [class*='_contentEditable_'] strong,
+.dark [class*='_contentEditable_'] em,
+.dark [class*='_contentEditable_'] td,
+.dark [class*='_contentEditable_'] th {
+    color: var(--ios-text) !important;
+}
+
+.dark [class*='_contentEditable_'] h1,
+.dark [class*='_contentEditable_'] h2,
+.dark [class*='_contentEditable_'] h3,
+.dark [class*='_contentEditable_'] h4,
+.dark [class*='_contentEditable_'] h5,
+.dark [class*='_contentEditable_'] h6 {
+    color: #ffffff !important;
+}
+
+.dark [class*='_contentEditable_'] a {
+    color: var(--ios-accent) !important;
+}
+
+.dark [class*='_contentEditable_'] code {
+    color: #bf5af2 !important;
+    background: var(--ios-fill) !important;
+}
+
+.dark [class*='_contentEditable_'] hr {
+    border-color: var(--ios-separator) !important;
+}
+
+.dark [class*='_contentEditable_'] blockquote {
+    border-left-color: var(--ios-separator) !important;
+    color: var(--ios-text-secondary) !important;
+}
+
+/* ══════════════════════════════════════════
+   Dark Mode — Popups & Dialogs
+   ══════════════════════════════════════════ */
+.dark [class*='_dialogContent_'] {
     background: var(--ios-surface) !important;
     color: var(--ios-text) !important;
     border-color: var(--ios-separator) !important;
@@ -144,4 +226,8 @@
     background: var(--ios-fill) !important;
     color: var(--ios-text) !important;
     border-color: var(--ios-separator) !important;
+}
+
+[class*='_popupContainer_'] {
+    z-index: 50 !important;
 }
