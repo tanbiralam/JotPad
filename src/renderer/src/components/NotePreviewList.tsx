@@ -30,20 +30,21 @@ export const NotePreviewList = ({ onSelect, className, ...props }: NotePreviewLi
   return (
     <ul className={className} {...props}>
       {notes.map((note, index) => (
-        <NotePreview
-          key={note.title + note.lastEditTime}
-          isActive={selectedNoteIndex === index}
-          onClick={handleNoteSelect(index)}
-          isPinned={pinnedNotes.includes(note.title)}
-          onTogglePin={(e) => {
-            e.stopPropagation()
-            togglePin(note.title)
-          }}
-          onRename={async (newTitle) => {
-            await rename({ oldTitle: note.title, newTitle })
-          }}
-          {...note}
-        />
+        <li key={note.title} className="note-item" style={{ animationDelay: `${index * 25}ms` }}>
+          <NotePreview
+            isActive={selectedNoteIndex === index}
+            onClick={handleNoteSelect(index)}
+            isPinned={pinnedNotes.includes(note.title)}
+            onTogglePin={(e) => {
+              e.stopPropagation()
+              togglePin(note.title)
+            }}
+            onRename={async (newTitle) => {
+              await rename({ oldTitle: note.title, newTitle })
+            }}
+            {...note}
+          />
+        </li>
       ))}
     </ul>
   )
