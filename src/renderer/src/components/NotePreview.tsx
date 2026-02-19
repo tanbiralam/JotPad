@@ -1,13 +1,15 @@
 import { cn, formatDateFromMs } from '@renderer/utils'
 import { NoteInfo } from '@shared/models'
 import { ComponentProps, useState } from 'react'
-import { LuPin, LuPinOff } from 'react-icons/lu'
+import { LuMoreHorizontal } from 'react-icons/lu'
+import { NoteContextMenu } from './NoteContextMenu'
 
 export type NotePreviewProps = NoteInfo & {
   isActive?: boolean
   isPinned?: boolean
-  onTogglePin?: (e: React.MouseEvent) => void
+  onTogglePin?: () => void
   onRename?: (newTitle: string) => void
+  onDelete?: () => void
 } & ComponentProps<'div'>
 
 export const NotePreview = ({
@@ -18,11 +20,13 @@ export const NotePreview = ({
   isPinned = false,
   onTogglePin,
   onRename,
+  onDelete,
   className,
   ...props
 }: NotePreviewProps) => {
   const [isEditing, setIsEditing] = useState(false)
   const [editedTitle, setEditedTitle] = useState(title)
+  const [showMenu, setShowMenu] = useState(false)
 
   const handleRename = () => {
     if (editedTitle.trim() && editedTitle !== title && onRename) {
@@ -74,20 +78,23 @@ export const NotePreview = ({
             {title}
           </h3>
         )}
-        <div className="flex items-center gap-2">
-          {onTogglePin && (
-            <button
-              className={cn(
-                'p-1 rounded-md transition-all duration-200 hover:bg-black/5 dark:hover:bg-white/10',
-                isActive ? 'text-white/80 hover:text-white' : 'text-zinc-400 hover:text-zinc-600',
-                !isPinned && 'opacity-0 group-hover:opacity-100'
-              )}
-              onClick={onTogglePin}
-              title={isPinned ? 'Unpin note' : 'Pin note'}
-            >
-              {isPinned ? <LuPinOff className="w-3 h-3" /> : <LuPin className="w-3 h-3" />}
-            </button>
-          )}
+        <div className="flex items-center gap-1.5">
+          {/* Three-dot menu button */}
+          <button
+            className={cn(
+              'p-1 rounded-md transition-all duration-200 hover:bg-black/5 dark:hover:bg-white/10',
+              isActive ? 'text-white/80 hover:text-white' : 'text-zinc-400 hover:text-zinc-600',
+              !showMenu && 'opacity-0 group-hover:opacity-100'
+            )}
+            onClick={(e) => {
+              e.stopPropagation()
+              setShowMenu(!showMenu)
+            }}
+            title="More actions"
+          >
+            <LuMoreHorizontal className="w-4 h-4" />
+          </button>
+          {/* Extension badge */}
           <span
             className={cn('text-[10px] font-semibold px-1.5 py-0.5 rounded-md uppercase shrink-0', {
               'bg-white/20 text-white': isActive,
@@ -106,6 +113,16 @@ export const NotePreview = ({
       >
         {date}
       </span>
+
+      {/* Context Menu */}
+      <NoteContextMenu
+        isOpen={showMenu}
+        onClose={() => setShowMenu(false)}
+        isPinned={isPinned}
+        onTogglePin={() => onTogglePin?.()}
+        onRename={() => setIsEditing(true)}
+        onDelete={() => onDelete?.()}
+      />
     </div>
   )
 }

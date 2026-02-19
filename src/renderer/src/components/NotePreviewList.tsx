@@ -1,9 +1,10 @@
 import { useNotesList } from '@renderer/hooks/useNotesList'
-import { pinnedNotesAtom, renameNote, togglePinNote } from '@renderer/store'
+import { deleteNote, pinnedNotesAtom, renameNote, togglePinNote } from '@renderer/store'
 import { useAtomValue, useSetAtom } from 'jotai'
 import { isEmpty } from 'lodash'
-import { ComponentProps } from 'react'
+import { ComponentProps, useState } from 'react'
 import { twMerge } from 'tailwind-merge'
+import { DeleteConfirmModal } from './DeleteConfirmModal'
 import { NotePreview } from './NotePreview'
 
 export type NotePreviewListProps = ComponentProps<'ul'> & {
@@ -15,6 +16,8 @@ export const NotePreviewList = ({ onSelect, className, ...props }: NotePreviewLi
   const pinnedNotes = useAtomValue(pinnedNotesAtom)
   const togglePin = useSetAtom(togglePinNote)
   const rename = useSetAtom(renameNote)
+  const handleDelete = useSetAtom(deleteNote)
+  const [deleteTarget, setDeleteTarget] = useState<{ title: string; ext: string } | null>(null)
 
   if (!notes) return null
 
@@ -28,24 +31,35 @@ export const NotePreviewList = ({ onSelect, className, ...props }: NotePreviewLi
     )
   }
   return (
-    <ul className={className} {...props}>
-      {notes.map((note, index) => (
-        <li key={note.title} className="note-item" style={{ animationDelay: `${index * 25}ms` }}>
-          <NotePreview
-            isActive={selectedNoteIndex === index}
-            onClick={handleNoteSelect(index)}
-            isPinned={pinnedNotes.includes(note.title)}
-            onTogglePin={(e) => {
-              e.stopPropagation()
-              togglePin(note.title)
-            }}
-            onRename={async (newTitle) => {
-              await rename({ oldTitle: note.title, newTitle })
-            }}
-            {...note}
-          />
-        </li>
-      ))}
-    </ul>
+    <>
+      <ul className={className} {...props}>
+        {notes.map((note, index) => (
+          <li key={note.title} className="note-item" style={{ animationDelay: `${index * 25}ms` }}>
+            <NotePreview
+              isActive={selectedNoteIndex === index}
+              onClick={handleNoteSelect(index)}
+              isPinned={pinnedNotes.includes(note.title)}
+              onTogglePin={() => togglePin(note.title)}
+              onRename={async (newTitle) => {
+                await rename({ oldTitle: note.title, newTitle })
+              }}
+              onDelete={() => setDeleteTarget({ title: note.title, ext: note.ext })}
+              {...note}
+            />
+          </li>
+        ))}
+      </ul>
+      <DeleteConfirmModal
+        isOpen={deleteTarget !== null}
+        noteTitle={deleteTarget?.title}
+        onCancel={() => setDeleteTarget(null)}
+        onConfirm={async () => {
+          if (deleteTarget) {
+            await handleDelete(deleteTarget)
+            setDeleteTarget(null)
+          }
+        }}
+      />
+    </>
   )
 }

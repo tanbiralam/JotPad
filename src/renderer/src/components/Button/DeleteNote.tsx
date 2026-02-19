@@ -1,5 +1,5 @@
-import { deleteNote } from '@renderer/store'
-import { useSetAtom } from 'jotai'
+import { deleteNote, selectedNoteAtom } from '@renderer/store'
+import { useAtomValue, useSetAtom } from 'jotai'
 import { useState } from 'react'
 import { FaRegTrashCan } from 'react-icons/fa6'
 import { DeleteConfirmModal } from '../DeleteConfirmModal'
@@ -7,6 +7,7 @@ import { ActionButton, ActionButtonProps } from './ActionButton'
 
 export const DeleteNote = ({ ...props }: ActionButtonProps) => {
   const deleteEmptyNote = useSetAtom(deleteNote)
+  const selectedNote = useAtomValue(selectedNoteAtom)
   const [showModal, setShowModal] = useState(false)
 
   const handleDelete = async () => {
@@ -22,6 +23,7 @@ export const DeleteNote = ({ ...props }: ActionButtonProps) => {
       </ActionButton>
       <DeleteConfirmModal
         isOpen={showModal}
+        noteTitle={selectedNote?.title}
         onCancel={() => setShowModal(false)}
         onConfirm={handleDelete}
       />

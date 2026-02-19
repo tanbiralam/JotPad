@@ -1,11 +1,21 @@
 import { ComponentProps } from 'react'
-import { AddNote, DeleteNote } from './Button'
+import { LuTrash2 } from 'react-icons/lu'
+import { ActionButton, AddNote, DeleteNote, ExportPDFButton } from './Button'
 
-export const ActionButtonRow = ({ ...props }: ComponentProps<'div'>) => {
+type ActionButtonRowProps = ComponentProps<'div'> & {
+  onOpenTrash?: () => void
+}
+
+export const ActionButtonRow = ({ onOpenTrash, ...props }: ActionButtonRowProps) => {
   return (
     <div {...props}>
       <AddNote />
       <DeleteNote />
+      <ExportPDFButton />
+      <ActionButton onClick={onOpenTrash}>
+        <LuTrash2 className="w-4 h-4" style={{ color: 'var(--ios-text-secondary)' }} />
+        <span>Trash</span>
+      </ActionButton>
     </div>
   )
 }

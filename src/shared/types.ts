@@ -1,4 +1,4 @@
-import { NoteContent, NoteInfo } from './models'
+import { NoteContent, NoteInfo, TrashInfo } from './models'
 
 export type GetNotes = () => Promise<NoteInfo[]>
 export type ReadNote = (title: NoteInfo['title'], ext: NoteInfo['ext']) => Promise<NoteContent>
@@ -14,3 +14,10 @@ export type RenameNote = (
   newTitle: NoteInfo['title'],
   ext: NoteInfo['ext']
 ) => Promise<boolean>
+export type ExportPDF = () => Promise<boolean>
+
+// Trash operations
+export type TrashNote = (title: NoteInfo['title'], ext: NoteInfo['ext']) => Promise<boolean>
+export type GetTrash = () => Promise<TrashInfo[]>
+export type RestoreNote = (title: NoteInfo['title'], ext: NoteInfo['ext']) => Promise<boolean>
+export type EmptyTrash = () => Promise<boolean>

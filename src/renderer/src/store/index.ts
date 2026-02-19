@@ -92,22 +92,28 @@ export const createNote = atom(null, async (get, set) => {
   set(selectedNoteIndexAtom, 0)
 })
 
-export const deleteNote = atom(null, async (get, set) => {
+export const deleteNote = atom(null, async (get, set, target?: { title: string; ext: string }) => {
   const notes = get(notesAtom)
-  const selectedNote = get(selectedNoteAtom)
+  if (!notes) return
 
-  if (!selectedNote || !notes) return
+  // Use target if provided, otherwise fall back to selected note
+  const noteToDelete = target ?? get(selectedNoteAtom)
+  if (!noteToDelete) return
 
-  const isDeleted = await window.context.deletenote(selectedNote.title, selectedNote.ext)
+  const isDeleted = await window.context.trashNote(noteToDelete.title, noteToDelete.ext)
 
   if (!isDeleted) return
 
   set(
     notesAtom,
-    notes.filter((note) => note.title !== selectedNote.title)
+    notes.filter((note) => note.title !== noteToDelete.title)
   )
 
-  set(selectedNoteIndexAtom, null)
+  // Clear selection if the deleted note was the selected one
+  const selectedNote = get(selectedNoteAtom)
+  if (selectedNote?.title === noteToDelete.title) {
+    set(selectedNoteIndexAtom, null)
+  }
 })
 
 export const updateNote = atom(null, async (get, set, newContent: NoteContent) => {

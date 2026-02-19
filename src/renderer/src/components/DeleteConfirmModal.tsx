@@ -1,15 +1,16 @@
-import { selectedNoteAtom } from '@renderer/store'
-import { useAtomValue } from 'jotai'
-
 interface DeleteConfirmModalProps {
   isOpen: boolean
+  noteTitle?: string
   onCancel: () => void
   onConfirm: () => void
 }
 
-export const DeleteConfirmModal = ({ isOpen, onCancel, onConfirm }: DeleteConfirmModalProps) => {
-  const selectedNote = useAtomValue(selectedNoteAtom)
-
+export const DeleteConfirmModal = ({
+  isOpen,
+  noteTitle,
+  onCancel,
+  onConfirm
+}: DeleteConfirmModalProps) => {
   if (!isOpen) return null
 
   return (
@@ -54,10 +55,8 @@ export const DeleteConfirmModal = ({ isOpen, onCancel, onConfirm }: DeleteConfir
           </h3>
           <p className="text-sm mt-1.5 leading-snug" style={{ color: 'var(--ios-text-secondary)' }}>
             Are you sure you want to delete{' '}
-            <strong style={{ color: 'var(--ios-text)' }}>
-              {selectedNote?.title ?? 'this note'}
-            </strong>
-            ? This action cannot be undone.
+            <strong style={{ color: 'var(--ios-text)' }}>{noteTitle ?? 'this note'}</strong>? It
+            will be moved to Trash and auto-purged after 30 days.
           </p>
         </div>
 

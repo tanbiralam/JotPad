@@ -1,6 +1,6 @@
-import { createNote, deleteNote, resolvedThemeAtom } from '@renderer/store'
+import { createNote, deleteNote, notesAtom, resolvedThemeAtom } from '@renderer/store'
 import { useAtomValue, useSetAtom } from 'jotai'
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import {
   ActionButtonRow,
   Content,
@@ -10,9 +10,11 @@ import {
   NotePreviewList,
   RootLayout,
   SearchBar,
+  ShortcutCheatSheet,
   Sidebar,
   StatusBar,
-  ThemeToggle
+  ThemeToggle,
+  TrashPanel
 } from './components'
 import { useNoteNavigation } from './hooks/useNoteNavigation'
 
@@ -20,6 +22,9 @@ const App = () => {
   const contentContainerRef = useRef<HTMLDivElement>(null)
   const searchInputRef = useRef<HTMLInputElement>(null)
   const resolvedTheme = useAtomValue(resolvedThemeAtom)
+  const [showShortcuts, setShowShortcuts] = useState(false)
+  const [showTrash, setShowTrash] = useState(false)
+  const setNotes = useSetAtom(notesAtom)
 
   const createEmptyNote = useSetAtom(createNote)
   const deleteEmptyNote = useSetAtom(deleteNote)
@@ -54,6 +59,18 @@ const App = () => {
         e.preventDefault()
         searchInputRef.current?.focus()
       }
+
+      // Ctrl/Cmd + Shift + E -> Export PDF
+      if (isCmdOrCtrl && e.shiftKey && e.key.toLowerCase() === 'e') {
+        e.preventDefault()
+        window.context.exportPDF()
+      }
+
+      // Ctrl/Cmd + / -> Toggle Shortcuts Cheat Sheet
+      if (isCmdOrCtrl && e.key === '/') {
+        e.preventDefault()
+        setShowShortcuts((prev) => !prev)
+      }
     }
 
     window.addEventListener('keydown', handleKeyDown)
@@ -70,7 +87,7 @@ const App = () => {
       <RootLayout>
         <Sidebar className="p-3">
           <div className="flex items-center justify-between mt-1">
-            <ActionButtonRow className="flex space-x-2" />
+            <ActionButtonRow className="flex space-x-2" onOpenTrash={() => setShowTrash(true)} />
             <ThemeToggle />
           </div>
           <SearchBar ref={searchInputRef} className="mt-3" />
@@ -87,6 +104,15 @@ const App = () => {
           <StatusBar />
         </div>
       </RootLayout>
+      <ShortcutCheatSheet isOpen={showShortcuts} onClose={() => setShowShortcuts(false)} />
+      <TrashPanel
+        isOpen={showTrash}
+        onClose={() => setShowTrash(false)}
+        onRestored={async () => {
+          const notes = await window.context.getNotes()
+          setNotes(notes)
+        }}
+      />
     </>
   )
 }

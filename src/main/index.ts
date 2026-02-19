@@ -1,13 +1,39 @@
-import { createnote, deletenote, getNotes, readNote, renameNote, writeNote } from '@/lib'
+import {
+  createnote,
+  deletenote,
+  emptyTrash,
+  getNotes,
+  getTrash,
+  purgeOldTrash,
+  readNote,
+  renameNote,
+  restoreNote,
+  trashNote,
+  writeNote
+} from '@/lib'
 import { electronApp, optimizer } from '@electron-toolkit/utils'
-import { CreateNote, DeleteNote, GetNotes, ReadNote, RenameNote, WriteNote } from '@shared/types'
-import { BrowserWindow, app, ipcMain, shell } from 'electron'
+import {
+  CreateNote,
+  DeleteNote,
+  EmptyTrash,
+  GetNotes,
+  GetTrash,
+  ReadNote,
+  RenameNote,
+  RestoreNote,
+  TrashNote,
+  WriteNote
+} from '@shared/types'
+import { BrowserWindow, app, dialog, ipcMain, shell } from 'electron'
+import { writeFile } from 'fs-extra'
 import { join } from 'path'
 import icon from '../../resources/icon.png?asset'
 
+let mainWindow: BrowserWindow | null = null
+
 function createWindow(): void {
   // Create the browser window.
-  const mainWindow = new BrowserWindow({
+  mainWindow = new BrowserWindow({
     width: 900,
     height: 670,
     show: false,
@@ -29,7 +55,7 @@ function createWindow(): void {
   })
 
   mainWindow.on('ready-to-show', () => {
-    mainWindow.show()
+    mainWindow!.show()
   })
 
   mainWindow.webContents.setWindowOpenHandler((details) => {
@@ -63,15 +89,49 @@ app.whenReady().then(() => {
     optimizer.watchWindowShortcuts(window)
   })
 
-  // IPC test
-  // ipcMain.on('ping', () => console.log('pong'))
-
   ipcMain.handle('getNotes', (_, ...args: Parameters<GetNotes>) => getNotes(...args))
   ipcMain.handle('readNote', (_, ...args: Parameters<ReadNote>) => readNote(...args))
   ipcMain.handle('writeNote', (_, ...args: Parameters<WriteNote>) => writeNote(...args))
   ipcMain.handle('createnote', (_, ...args: Parameters<CreateNote>) => createnote(...args))
   ipcMain.handle('deletenote', (_, ...args: Parameters<DeleteNote>) => deletenote(...args))
   ipcMain.handle('renameNote', (_, ...args: Parameters<RenameNote>) => renameNote(...args))
+
+  // Trash IPC handlers
+  ipcMain.handle('trashNote', (_, ...args: Parameters<TrashNote>) => trashNote(...args))
+  ipcMain.handle('getTrash', (_, ...args: Parameters<GetTrash>) => getTrash(...args))
+  ipcMain.handle('restoreNote', (_, ...args: Parameters<RestoreNote>) => restoreNote(...args))
+  ipcMain.handle('emptyTrash', (_, ...args: Parameters<EmptyTrash>) => emptyTrash(...args))
+
+  // Auto-purge trash items older than 30 days
+  purgeOldTrash().catch((err) => console.error('Purge failed:', err))
+
+  // PDF Export handler
+  ipcMain.handle('exportPDF', async () => {
+    if (!mainWindow) return false
+
+    const { filePath, canceled } = await dialog.showSaveDialog(mainWindow, {
+      title: 'Export as PDF',
+      defaultPath: 'note.pdf',
+      buttonLabel: 'Export',
+      filters: [{ name: 'PDF', extensions: ['pdf'] }]
+    })
+
+    if (canceled || !filePath) return false
+
+    try {
+      const pdfData = await mainWindow.webContents.printToPDF({
+        printBackground: true,
+        margins: { top: 0.5, bottom: 0.5, left: 0.5, right: 0.5 }
+      })
+
+      await writeFile(filePath, pdfData)
+      console.info(`PDF exported to ${filePath}`)
+      return true
+    } catch (error) {
+      console.error('PDF export failed:', error)
+      return false
+    }
+  })
 
   createWindow()
 
@@ -90,6 +150,3 @@ app.on('window-all-closed', () => {
     app.quit()
   }
 })
-
-// In this file you can include the rest of your app"s specific main process
-// code. You can also put them in separate files and require them here.
