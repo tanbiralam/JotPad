@@ -12,6 +12,7 @@ import {
   SearchBar,
   ShortcutCheatSheet,
   Sidebar,
+  SplashScreen,
   StatusBar,
   ThemeToggle,
   TrashPanel
@@ -22,6 +23,7 @@ const App = () => {
   const contentContainerRef = useRef<HTMLDivElement>(null)
   const searchInputRef = useRef<HTMLInputElement>(null)
   const resolvedTheme = useAtomValue(resolvedThemeAtom)
+  const [showSplash, setShowSplash] = useState(true)
   const [showShortcuts, setShowShortcuts] = useState(false)
   const [showTrash, setShowTrash] = useState(false)
   const setNotes = useSetAtom(notesAtom)
@@ -83,6 +85,7 @@ const App = () => {
 
   return (
     <>
+      {showSplash && <SplashScreen onFinished={() => setShowSplash(false)} />}
       <DraggableTopBar />
       <RootLayout>
         <Sidebar className="p-3">
