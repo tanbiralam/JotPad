@@ -11,21 +11,21 @@ export const SearchBar = ({ className, ...props }: ComponentProps<'div'>) => {
     <div className={twMerge('relative', className)} {...props}>
       <LuSearch
         className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 pointer-events-none"
-        style={{ color: 'var(--color-ios-text-secondary)' }}
+        style={{ color: 'var(--ios-text-secondary)' }}
       />
       <input
         type="text"
         placeholder="Search notes..."
         value={searchQuery}
         onChange={(e) => setSearchQuery(e.target.value)}
-        className="w-full pl-9 pr-8 py-2 rounded-xl text-sm outline-none transition-all duration-200 placeholder:text-[var(--color-ios-text-secondary)]"
+        className="w-full pl-9 pr-8 py-2 rounded-xl text-sm outline-none transition-all duration-200 placeholder:text-[var(--ios-text-secondary)]"
         style={{
-          backgroundColor: 'var(--color-ios-fill)',
-          color: 'var(--color-ios-text)',
+          backgroundColor: 'var(--ios-fill)',
+          color: 'var(--ios-text)',
           border: 'none'
         }}
         onFocus={(e) => {
-          e.currentTarget.style.boxShadow = '0 0 0 2px var(--color-ios-accent)'
+          e.currentTarget.style.boxShadow = '0 0 0 2px var(--ios-accent)'
         }}
         onBlur={(e) => {
           e.currentTarget.style.boxShadow = 'none'
@@ -34,9 +34,9 @@ export const SearchBar = ({ className, ...props }: ComponentProps<'div'>) => {
       {searchQuery && (
         <button
           onClick={() => setSearchQuery('')}
-          className="absolute right-2 top-1/2 -translate-y-1/2 p-0.5 rounded-full transition-colors duration-150 hover:bg-[var(--color-ios-separator)] cursor-pointer"
+          className="absolute right-2 top-1/2 -translate-y-1/2 p-0.5 rounded-full transition-colors duration-150 hover:bg-[var(--ios-separator)] cursor-pointer"
         >
-          <LuX className="w-3.5 h-3.5" style={{ color: 'var(--color-ios-text-secondary)' }} />
+          <LuX className="w-3.5 h-3.5" style={{ color: 'var(--ios-text-secondary)' }} />
         </button>
       )}
     </div>

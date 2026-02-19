@@ -12,14 +12,14 @@ export const FloatingNoteTitle = ({ className, ...props }: ComponentProps<'div'>
     <div
       className={twMerge('flex justify-center py-3 sticky top-0 z-5', className)}
       style={{
-        backgroundColor: 'var(--color-ios-surface)',
-        borderBottom: '1px solid var(--color-ios-separator)',
+        backgroundColor: 'var(--ios-surface)',
+        borderBottom: '1px solid var(--ios-separator)',
         backdropFilter: 'blur(20px)',
         WebkitBackdropFilter: 'blur(20px)'
       }}
       {...props}
     >
-      <span className="font-semibold text-base" style={{ color: 'var(--color-ios-text)' }}>
+      <span className="font-semibold text-base" style={{ color: 'var(--ios-text)' }}>
         {selectedNote.title}
       </span>
     </div>

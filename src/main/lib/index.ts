@@ -1,4 +1,4 @@
-import { appDirName, fileEncoding } from '@shared/constants'
+import { appDirName, fileEncoding, supportedExtensions } from '@shared/constants'
 import { NoteInfo } from '@shared/models'
 import { CreateNote, DeleteNote, GetNotes, ReadNote, WriteNote } from '@shared/types'
 import { dialog } from 'electron'
@@ -22,7 +22,9 @@ export const getNotes: GetNotes = async () => {
     withFileTypes: false
   })
 
-  const notes = notesFileNames.filter((fileName) => fileName.endsWith('.md'))
+  const notes = notesFileNames.filter((fileName) =>
+    supportedExtensions.some((ext) => fileName.endsWith(ext))
+  )
 
   if (isEmpty(notes)) {
     console.info('No notes found, creating a Welcome Note')
@@ -40,23 +42,25 @@ export const getNotes: GetNotes = async () => {
 
 export const getNoteInfoFromFileName = async (filename: string): Promise<NoteInfo> => {
   const fileStats = await stat(`${getRootDir()}/${filename}`)
+  const parsed = path.parse(filename)
 
   return {
-    title: filename.replace(/\.md$/, ''),
-    lastEditTime: fileStats.mtimeMs
+    title: parsed.name,
+    lastEditTime: fileStats.mtimeMs,
+    ext: parsed.ext
   }
 }
 
-export const readNote: ReadNote = async (filename) => {
+export const readNote: ReadNote = async (filename, ext) => {
   const rootDir = getRootDir()
 
-  return readFile(`${rootDir}/${filename}.md`, { encoding: fileEncoding })
+  return readFile(`${rootDir}/${filename}${ext}`, { encoding: fileEncoding })
 }
 
-export const writeNote: WriteNote = async (filename, content) => {
+export const writeNote: WriteNote = async (filename, ext, content) => {
   const rootDir = getRootDir()
-  console.info(`Writing note ${filename}`)
-  return writeFile(`${rootDir}/${filename}.md`, content, { encoding: fileEncoding })
+  console.info(`Writing note ${filename}${ext}`)
+  return writeFile(`${rootDir}/${filename}${ext}`, content, { encoding: fileEncoding })
 }
 
 export const createnote: CreateNote = async () => {
@@ -70,7 +74,10 @@ export const createnote: CreateNote = async () => {
     buttonLabel: 'Create',
     properties: ['showOverwriteConfirmation'],
     showsTagField: false,
-    filters: [{ name: 'Markdown', extensions: ['md'] }]
+    filters: [
+      { name: 'Markdown', extensions: ['md'] },
+      { name: 'Text', extensions: ['txt'] }
+    ]
   })
 
   if (canceled || !filePath) {
@@ -97,7 +104,7 @@ export const createnote: CreateNote = async () => {
   return filename
 }
 
-export const deletenote: DeleteNote = async (filename) => {
+export const deletenote: DeleteNote = async (filename, ext) => {
   const rootDir = getRootDir()
 
   const { response } = await dialog.showMessageBox({
@@ -116,6 +123,6 @@ export const deletenote: DeleteNote = async (filename) => {
 
   console.info(`Deleting Note ${filename}`)
 
-  await remove(`${rootDir}/${filename}.md`)
+  await remove(`${rootDir}/${filename}${ext}`)
   return true
 }

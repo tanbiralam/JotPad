@@ -1,7 +1,11 @@
 import { NoteContent, NoteInfo } from './models'
 
 export type GetNotes = () => Promise<NoteInfo[]>
-export type ReadNote = (title: NoteInfo['title']) => Promise<NoteContent>
-export type WriteNote = (title: NoteInfo['title'], content: NoteContent) => Promise<void>
+export type ReadNote = (title: NoteInfo['title'], ext: NoteInfo['ext']) => Promise<NoteContent>
+export type WriteNote = (
+  title: NoteInfo['title'],
+  ext: NoteInfo['ext'],
+  content: NoteContent
+) => Promise<void>
 export type CreateNote = () => Promise<NoteInfo['title'] | false>
-export type DeleteNote = (title: NoteInfo['title']) => Promise<boolean>
+export type DeleteNote = (title: NoteInfo['title'], ext: NoteInfo['ext']) => Promise<boolean>

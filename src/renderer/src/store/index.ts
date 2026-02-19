@@ -2,9 +2,21 @@ import { NoteContent, NoteInfo } from '@shared/models'
 import { atom } from 'jotai'
 import { unwrap } from 'jotai/utils'
 
+// ── Theme ──
+export type ThemeMode = 'light' | 'dark' | 'system'
+export const themeModeAtom = atom<ThemeMode>(
+  (localStorage.getItem('jotpad-theme') as ThemeMode) || 'system'
+)
+
+export const resolvedThemeAtom = atom((get) => {
+  const mode = get(themeModeAtom)
+  if (mode !== 'system') return mode
+  return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+})
+
+// ── Notes ──
 const loadNotes = async () => {
   const notes = await window.context.getNotes()
-
   return notes.sort((a, b) => b.lastEditTime - a.lastEditTime)
 }
 
@@ -34,7 +46,7 @@ const selectedNoteAtomAsync = atom(async (get) => {
 
   const selectedNote = notes[selectedNoteIndex]
 
-  const noteContent = await window.context.readNote(selectedNote.title)
+  const noteContent = await window.context.readNote(selectedNote.title, selectedNote.ext)
 
   return {
     ...selectedNote,
@@ -45,7 +57,8 @@ const selectedNoteAtomAsync = atom(async (get) => {
 export const selectedNoteAtom = unwrap(selectedNoteAtomAsync, (prev) => prev) ?? {
   title: '',
   content: '',
-  lastEditTime: Date.now()
+  lastEditTime: Date.now(),
+  ext: '.md'
 }
 
 export const createNote = atom(null, async (get, set) => {
@@ -59,7 +72,8 @@ export const createNote = atom(null, async (get, set) => {
 
   const newNote: NoteInfo = {
     title,
-    lastEditTime: Date.now()
+    lastEditTime: Date.now(),
+    ext: '.md'
   }
 
   set(notesAtom, [newNote, ...notes.filter((note) => note.title !== newNote.title)])
@@ -73,7 +87,7 @@ export const deleteNote = atom(null, async (get, set) => {
 
   if (!selectedNote || !notes) return
 
-  const isDeleted = await window.context.deletenote(selectedNote.title)
+  const isDeleted = await window.context.deletenote(selectedNote.title, selectedNote.ext)
 
   if (!isDeleted) return
 
@@ -91,7 +105,7 @@ export const updateNote = atom(null, async (get, set, newContent: NoteContent) =
   if (!selectedNote || !notes) return
 
   // File Save on Disk
-  await window.context.writeNote(selectedNote.title, newContent)
+  await window.context.writeNote(selectedNote.title, selectedNote.ext, newContent)
 
   set(
     notesAtom,

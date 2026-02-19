@@ -1,61 +1,66 @@
 @import "tailwindcss";
 @plugin '@tailwindcss/typography';
 
-/* ── iOS-Inspired Design Tokens ── */
-@theme {
-    --font-sans: 'Inter', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI',
-        Roboto, 'Helvetica Neue', Arial, sans-serif;
+/* ── Light Theme (Default) ── */
+:root {
+    --ios-bg: #f2f2f7;
+    --ios-surface: #ffffff;
+    --ios-accent: #007aff;
+    --ios-accent-hover: #0066d6;
+    --ios-text: #1c1c1e;
+    --ios-text-secondary: #8e8e93;
+    --ios-separator: #e5e5ea;
+    --ios-fill: #e9e9eb;
+    --ios-danger: #ff3b30;
+    --ios-scrollbar: rgba(0, 0, 0, 0.15);
+    --ios-scrollbar-hover: rgba(0, 0, 0, 0.25);
+}
 
-    --color-ios-bg: #f2f2f7;
-    --color-ios-surface: #ffffff;
-    --color-ios-accent: #007aff;
-    --color-ios-accent-hover: #0066d6;
-    --color-ios-text: #1c1c1e;
-    --color-ios-text-secondary: #8e8e93;
-    --color-ios-separator: #e5e5ea;
-    --color-ios-fill: #e9e9eb;
-    --color-ios-sidebar-active: #007aff;
-    --color-ios-danger: #ff3b30;
+/* ── Dark Theme ── */
+.dark {
+    --ios-bg: #000000;
+    --ios-surface: #1c1c1e;
+    --ios-accent: #0a84ff;
+    --ios-accent-hover: #409cff;
+    --ios-text: #f5f5f7;
+    --ios-text-secondary: #98989d;
+    --ios-separator: #38383a;
+    --ios-fill: #2c2c2e;
+    --ios-danger: #ff453a;
+    --ios-scrollbar: rgba(255, 255, 255, 0.2);
+    --ios-scrollbar-hover: rgba(255, 255, 255, 0.35);
 }
 
 /* ── Base Styles ── */
 @layer base {
-    @font-face {
-        font-family: 'Inter';
-        font-style: normal;
-        font-weight: 100 900;
-        font-display: swap;
-        src: url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
-    }
 
     html,
     body {
-        @apply h-full;
-        @apply select-none;
-        @apply bg-transparent;
-        @apply overflow-hidden;
-        font-family: var(--font-sans);
+        @apply h-full select-none overflow-hidden;
+        background: transparent;
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+            'Helvetica Neue', Arial, sans-serif;
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
-        color: var(--color-ios-text);
+        color: var(--ios-text);
     }
 
     #root {
         @apply h-full;
     }
 
-    /* ── iOS-Style Scrollbar ── */
+    /* ── Scrollbar ── */
     ::-webkit-scrollbar {
         width: 6px;
     }
 
     ::-webkit-scrollbar-thumb {
-        background: rgba(0, 0, 0, 0.15);
+        background: var(--ios-scrollbar);
         border-radius: 10px;
     }
 
     ::-webkit-scrollbar-thumb:hover {
-        background: rgba(0, 0, 0, 0.25);
+        background: var(--ios-scrollbar-hover);
     }
 
     ::-webkit-scrollbar-track {
@@ -63,57 +68,80 @@
     }
 }
 
-/* ── MDXEditor Toolbar Overrides ── */
+/* ── Floating Toolbar ── */
 [class*='_toolbarRoot_'] {
-    background: var(--color-ios-surface) !important;
-    border-bottom: 1px solid var(--color-ios-separator) !important;
-    border-radius: 0 !important;
+    background: color-mix(in srgb, var(--ios-surface) 80%, transparent) !important;
+    backdrop-filter: blur(20px) !important;
+    -webkit-backdrop-filter: blur(20px) !important;
+    border: 1px solid var(--ios-separator) !important;
+    border-radius: 14px !important;
+    margin: 10px 16px 4px !important;
     padding: 4px 8px !important;
     min-height: 40px !important;
     position: sticky !important;
-    top: 0 !important;
+    top: 8px !important;
     z-index: 10 !important;
-    backdrop-filter: blur(20px) !important;
-    -webkit-backdrop-filter: blur(20px) !important;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08), 0 1px 3px rgba(0, 0, 0, 0.06) !important;
+}
+
+.dark [class*='_toolbarRoot_'] {
+    box-shadow: 0 2px 16px rgba(0, 0, 0, 0.4), 0 1px 4px rgba(0, 0, 0, 0.3) !important;
 }
 
 [class*='_toolbarRoot_'] button {
-    border-radius: 6px !important;
-    padding: 4px 6px !important;
+    border-radius: 8px !important;
+    padding: 4px 7px !important;
     min-width: 28px !important;
     min-height: 28px !important;
     transition: all 0.15s ease !important;
-    color: var(--color-ios-text) !important;
+    color: var(--ios-text) !important;
 }
 
 [class*='_toolbarRoot_'] button:hover {
-    background: var(--color-ios-fill) !important;
+    background: var(--ios-fill) !important;
 }
 
 [class*='_toolbarRoot_'] button[data-state='on'],
 [class*='_toolbarRoot_'] button[aria-pressed='true'] {
-    background: var(--color-ios-accent) !important;
+    background: var(--ios-accent) !important;
     color: white !important;
 }
 
 [class*='_toolbarRoot_'] [class*='_selectTrigger_'] {
-    border-radius: 6px !important;
+    border-radius: 8px !important;
     padding: 4px 8px !important;
     font-size: 13px !important;
-    border: 1px solid var(--color-ios-separator) !important;
+    border: 1px solid var(--ios-separator) !important;
+    background: var(--ios-fill) !important;
+    color: var(--ios-text) !important;
     transition: all 0.15s ease !important;
 }
 
 [class*='_toolbarRoot_'] [class*='_selectTrigger_']:hover {
-    background: var(--color-ios-fill) !important;
+    background: var(--ios-separator) !important;
 }
 
 [class*='_toolbarRoot_'] [class*='_separator_'] {
-    background: var(--color-ios-separator) !important;
+    background: var(--ios-separator) !important;
     margin: 0 6px !important;
 }
 
-/* ── MDXEditor Content Overrides ── */
+/* ── MDXEditor Content ── */
 [class*='_contentEditable_'] {
-    font-family: var(--font-sans) !important;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+    color: var(--ios-text) !important;
+}
+
+/* ── MDXEditor Dialog Overrides (dark mode) ── */
+.dark [class*='_dialogContent_'],
+.dark [class*='_dialogOverlay_'] {
+    background: var(--ios-surface) !important;
+    color: var(--ios-text) !important;
+    border-color: var(--ios-separator) !important;
+}
+
+.dark [class*='_dialogContent_'] input {
+    background: var(--ios-fill) !important;
+    color: var(--ios-text) !important;
+    border-color: var(--ios-separator) !important;
 }
