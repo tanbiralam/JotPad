@@ -47,31 +47,33 @@ export const filteredNotesAtom = atom((get) => {
   })
 })
 
-export const selectedNoteTitleAtom = atom<string | null>(null)
+// Stores both title AND ext so content loading doesn't need notesAtom
+export const selectedNoteTitleAtom = atom<{ title: string; ext: string } | null>(null)
 
-const selectedNoteAtomAsync = atom(async (get) => {
-  const notes = get(notesAtom)
-  const selectedTitle = get(selectedNoteTitleAtom)
-
-  if (selectedTitle === null || !notes) return null
-
-  const selectedNote = notes.find((n) => n.title === selectedTitle)
-  if (!selectedNote) return null
-
-  const noteContent = await window.context.readNote(selectedNote.title, selectedNote.ext)
-
-  return {
-    ...selectedNote,
-    content: noteContent
-  }
+// Content loads from disk ONLY when selectedNoteTitleAtom changes.
+// Does NOT depend on notesAtom, so auto-save updating lastEditTime
+// will never trigger a re-read → no MDXEditor re-render → no selection loss.
+const selectedNoteContentAtomAsync = atom(async (get) => {
+  const selected = get(selectedNoteTitleAtom)
+  if (!selected) return null
+  return await window.context.readNote(selected.title, selected.ext)
 })
 
-export const selectedNoteAtom = unwrap(selectedNoteAtomAsync, (prev) => prev) ?? {
-  title: '',
-  content: '',
-  lastEditTime: Date.now(),
-  ext: '.md'
-}
+const selectedNoteContentAtom = unwrap(selectedNoteContentAtomAsync, (prev) => prev)
+
+export const selectedNoteAtom = atom((get) => {
+  const selected = get(selectedNoteTitleAtom)
+  const content = get(selectedNoteContentAtom)
+
+  if (!selected || content == null) return null
+
+  return {
+    title: selected.title,
+    ext: selected.ext,
+    lastEditTime: Date.now(),
+    content
+  }
+})
 
 export const createNote = atom(null, async (get, set) => {
   const notes = get(notesAtom)
@@ -90,7 +92,7 @@ export const createNote = atom(null, async (get, set) => {
 
   set(notesAtom, [newNote, ...notes.filter((note) => note.title !== newNote.title)])
 
-  set(selectedNoteTitleAtom, newNote.title)
+  set(selectedNoteTitleAtom, { title: newNote.title, ext: newNote.ext })
 })
 
 export const deleteNote = atom(null, async (get, set, target?: { title: string; ext: string }) => {
@@ -182,7 +184,7 @@ export const renameNote = atom(
 
       const selectedNote = get(selectedNoteAtom)
       if (selectedNote?.title === oldTitle) {
-        set(selectedNoteTitleAtom, newTitle)
+        set(selectedNoteTitleAtom, { title: newTitle, ext: note.ext })
       }
     }
   }

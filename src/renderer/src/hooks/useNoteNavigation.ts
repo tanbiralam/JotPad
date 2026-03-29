@@ -4,7 +4,7 @@ import { useEffect } from 'react'
 
 export const useNoteNavigation = () => {
   const notes = useAtomValue(notesAtom)
-  const setSelectedTitle = useSetAtom(selectedNoteTitleAtom)
+  const setSelected = useSetAtom(selectedNoteTitleAtom)
 
   useEffect(() => {
     const handleLinkClick = (e: MouseEvent) => {
@@ -40,7 +40,7 @@ export const useNoteNavigation = () => {
       })
 
       if (targetNote) {
-        setSelectedTitle(targetNote.title)
+        setSelected({ title: targetNote.title, ext: targetNote.ext })
       } else {
         console.warn(`Note not found: ${decodedHref}`)
       }
@@ -51,5 +51,5 @@ export const useNoteNavigation = () => {
     return () => {
       document.removeEventListener('click', handleLinkClick)
     }
-  }, [notes, setSelectedTitle])
+  }, [notes, setSelected])
 }
