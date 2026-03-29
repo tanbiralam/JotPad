@@ -1,10 +1,10 @@
-import { notesAtom, selectedNoteIndexAtom } from '@renderer/store'
+import { notesAtom, selectedNoteTitleAtom } from '@renderer/store'
 import { useAtomValue, useSetAtom } from 'jotai'
 import { useEffect } from 'react'
 
 export const useNoteNavigation = () => {
   const notes = useAtomValue(notesAtom)
-  const setSelectedNoteIndex = useSetAtom(selectedNoteIndexAtom)
+  const setSelectedTitle = useSetAtom(selectedNoteTitleAtom)
 
   useEffect(() => {
     const handleLinkClick = (e: MouseEvent) => {
@@ -12,6 +12,10 @@ export const useNoteNavigation = () => {
       const anchor = target.closest('a')
 
       if (!anchor) return
+
+      // Only handle links inside the editor content area (contentEditable),
+      // NOT toolbar buttons or other UI elements that may render as <a> tags
+      if (!anchor.closest('[contenteditable="true"]')) return
 
       const href = anchor.getAttribute('href')
       if (!href) return
@@ -27,7 +31,7 @@ export const useNoteNavigation = () => {
 
       const decodedHref = decodeURIComponent(href)
       // Try to find note by title (with or without extension)
-      const targetNoteIndex = notes?.findIndex((n) => {
+      const targetNote = notes?.find((n) => {
         return (
           n.title === decodedHref ||
           n.title === decodedHref.replace(/\.md$/, '') ||
@@ -35,8 +39,8 @@ export const useNoteNavigation = () => {
         )
       })
 
-      if (targetNoteIndex !== undefined && targetNoteIndex !== -1) {
-        setSelectedNoteIndex(targetNoteIndex)
+      if (targetNote) {
+        setSelectedTitle(targetNote.title)
       } else {
         console.warn(`Note not found: ${decodedHref}`)
       }
@@ -47,5 +51,5 @@ export const useNoteNavigation = () => {
     return () => {
       document.removeEventListener('click', handleLinkClick)
     }
-  }, [notes, setSelectedNoteIndex])
+  }, [notes, setSelectedTitle])
 }

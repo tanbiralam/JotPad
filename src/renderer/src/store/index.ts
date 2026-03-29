@@ -47,15 +47,16 @@ export const filteredNotesAtom = atom((get) => {
   })
 })
 
-export const selectedNoteIndexAtom = atom<number | null>(null)
+export const selectedNoteTitleAtom = atom<string | null>(null)
 
 const selectedNoteAtomAsync = atom(async (get) => {
   const notes = get(notesAtom)
-  const selectedNoteIndex = get(selectedNoteIndexAtom)
+  const selectedTitle = get(selectedNoteTitleAtom)
 
-  if (selectedNoteIndex === null || !notes) return null
+  if (selectedTitle === null || !notes) return null
 
-  const selectedNote = notes[selectedNoteIndex]
+  const selectedNote = notes.find((n) => n.title === selectedTitle)
+  if (!selectedNote) return null
 
   const noteContent = await window.context.readNote(selectedNote.title, selectedNote.ext)
 
@@ -89,7 +90,7 @@ export const createNote = atom(null, async (get, set) => {
 
   set(notesAtom, [newNote, ...notes.filter((note) => note.title !== newNote.title)])
 
-  set(selectedNoteIndexAtom, 0)
+  set(selectedNoteTitleAtom, newNote.title)
 })
 
 export const deleteNote = atom(null, async (get, set, target?: { title: string; ext: string }) => {
@@ -112,7 +113,7 @@ export const deleteNote = atom(null, async (get, set, target?: { title: string; 
   // Clear selection if the deleted note was the selected one
   const selectedNote = get(selectedNoteAtom)
   if (selectedNote?.title === noteToDelete.title) {
-    set(selectedNoteIndexAtom, null)
+    set(selectedNoteTitleAtom, null)
   }
 })
 
@@ -181,7 +182,7 @@ export const renameNote = atom(
 
       const selectedNote = get(selectedNoteAtom)
       if (selectedNote?.title === oldTitle) {
-        set(selectedNoteIndexAtom, 0)
+        set(selectedNoteTitleAtom, newTitle)
       }
     }
   }
