@@ -35,15 +35,21 @@ It features a rich MDX-powered Markdown editor, atomic state management with Jot
 
 ## 📸 Screenshots
 
-### 1. Main Editor
+### Main Editor
 
 ![JotPad Main Editor - Rich Markdown Editing](./images/jotpad-main-editor.png)
 
 _Distraction-free markdown editor with live preview, block-based editing, and beautiful typography._
 
-### 2. Notes Sidebar & Management
+### Splash Screen
 
-![JotPad Sidebar - Notes List, Search & Trash](./images/jotpad-splash-screen.png)
+![JotPad Splash Screen](./images/jotpad-splash-screen.png)
+
+_Clean loading screen on application startup._
+
+### Notes Sidebar & Management
+
+![JotPad Sidebar - Notes List, Search & Trash](./images/jotpad-sidebar.png)
 
 _Fast note navigation, real-time search, pinning, and soft-delete trash system._
 
@@ -78,8 +84,6 @@ JotPad/
 │   └── shared/               # Shared TypeScript types
 └── electron.vite.config.ts
 ```
-
-````
 
 ---
 
@@ -146,8 +150,3 @@ We welcome contributions!
 ## 📜 License
 
 Distributed under the **MIT License**. See [`LICENSE`](./LICENSE) for more details.
-
----
-
-**Made with ❤️ by [Tanbir Alam](https://github.com/tanbiralam)**
-````
