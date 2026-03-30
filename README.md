@@ -5,9 +5,14 @@
 [![Issues](https://img.shields.io/github/issues/tanbiralam/JotPad)](https://github.com/tanbiralam/JotPad/issues)
 
 JotPad is a modern, lightweight, and extensible note-taking desktop application built with **Electron**, **React**, and **TypeScript**. Designed for speed and developer experience, it features a rich MDX (Markdown) editor, atomic state management, and seamless offline-first local file system storage.
-
 ---
 
+## 📥 Download (Latest)
+
+- [Download for Windows (.exe)](https://github.com/tanbiralam/JotPad/releases/download/v1.0.0/JotPad-1.0.0-setup.exe)
+- [View all release files](https://github.com/tanbiralam/JotPad/releases/tag/v1.0.0)
+
+---
 ## ✨ Key Features
 
 - **Rich Markdown Editing**: Powered by [`@mdxeditor/editor`](https://mdxeditor.dev/), offering a live-preview, block-based WYSIWYG experience for Markdown while fully preserving standard formatting.
