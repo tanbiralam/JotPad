@@ -1,251 +1,156 @@
 # JotPad 📝
 
-[![npm version](https://img.shields.io/npm/v/note-app.svg)](https://www.npmjs.com/package/note-app)  
-[![License](https://img.shields.io/github/license/tanbiralam/JotPad)](https://github.com/tanbiralam/JotPad/blob/main/LICENSE)  
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Build Status](https://github.com/tanbiralam/JotPad/actions/workflows/build.yml/badge.svg)](https://github.com/tanbiralam/JotPad/actions/workflows/build.yml)  
 [![Issues](https://img.shields.io/github/issues/tanbiralam/JotPad)](https://github.com/tanbiralam/JotPad/issues)
 
-JotPad is a lightweight, Electron-based note-taking application built with React and TypeScript. It offers a rich markdown editing experience combined with efficient atomic state management to handle fast note creation and editing. Designed as a cross-platform desktop app, JotPad aims to be a modern, extensible alternative to traditional notepads.
+JotPad is a modern, lightweight, and extensible note-taking desktop application built with **Electron**, **React**, and **TypeScript**. Designed for speed and developer experience, it features a rich MDX (Markdown) editor, atomic state management, and seamless offline-first local file system storage.
 
-## ✨ Features
+---
 
-- **Rich Markdown Editor** powered by [`@mdxeditor/editor`](https://www.npmjs.com/package/@mdxeditor/editor) for smooth, intuitive formatting and live preview.
-- **Atomic State Management** using [`jotai`](https://jotai.org/) for scalable and efficient state handling of notes and UI.
-- **File System Integration** with [`fs-extra`](https://github.com/jprichardson/node-fs-extra) for seamless note saving, loading, and management.
-- **Cross-Platform Electron App** supporting Windows, macOS, and Linux with platform-specific builds.
-- **TailwindCSS Styling** enhanced by `tailwind-merge` and `@tailwindcss/typography` plugins for a consistent, responsive, and elegant UI.
-- **Secure IPC Communication** via Electron's preload scripts using `@electron-toolkit/preload` for safe main-renderer process messaging.
-- **Robust TypeScript Setup** with strict type checking, linting, and formatting ensuring reliable code quality.
-- **Comprehensive Build & Packaging** pipelines configured through `electron-builder` for easy distribution.
+## ✨ Key Features
 
-## 📋 Prerequisites
+- **Rich Markdown Editing**: Powered by [`@mdxeditor/editor`](https://mdxeditor.dev/), offering a live-preview, block-based WYSIWYG experience for Markdown while fully preserving standard formatting.
+- **Offline First & Secure Storage**: Notes are persisted directly to your local file system as `.md` and `.txt` files through highly secure Inter-Process Communication (IPC). No cloud dependency.
+- **Lightning-Fast Atomic State**: State management is handled by [`jotai`](https://jotai.org/) allowing isolated re-renders, instant auto-saving, and high UI performance.
+- **Beautiful UI**: Polished, cross-platform interface styled via **Tailwind CSS**.
+- **Powerful Search and Management**: Real-time instantaneous filtering, note pinning, and soft-delete features (Trash panel).
+- **Cross-Platform**: Packaged for Windows, macOS, and Linux using `electron-builder`.
 
-Before starting, ensure you have the following installed and configured:
+## 📸 Screenshots
 
-1. **Node.js** version 18 or higher ([Download Node.js](https://nodejs.org/))  
-2. **npm** package manager (comes with Node.js)  
-3. **Git** for cloning the repository ([Git Downloads](https://git-scm.com/downloads))  
-4. Familiarity with **TypeScript**, **React**, and **Electron** is helpful but not mandatory.  
-5. (Optional) A modern IDE like [VSCode](https://code.visualstudio.com/) with ESLint and Prettier extensions for best developer experience.
+### 1. Main Editor
 
-## 🚀 Installation
+![JotPad Main Editor - Rich Markdown Editing](./images/jotpad-main-editor.png)
 
-1. **Clone the repository**  
-```bash
-git clone https://github.com/tanbiralam/JotPad.git
-cd JotPad
+_Distraction-free markdown editor with live preview, block-based editing, and beautiful typography._
+
+### 2. Notes Sidebar & Management
+
+![JotPad Home](./images/jotpad-splash-screen.png)
+
+_Fast note navigation, real-time search, pinning, and soft-delete trash system._
+
+---
+
+> All screenshots taken on Windows 11. The app maintains a consistent, native look across **Windows**, **macOS**, and **Linux**.
+
+## 🏗️ Technical Architecture
+
+This application is built using the robust [`electron-vite`](https://electron-vite.org/) tooling.
+
+1. **Main Process (`src/main`)**:
+   - Handles the heavy lifting and OS integrations.
+   - Manages file system operations (`fs-extra`) to read, write, and safely delete notes directly to the user's hard drive.
+2. **Preload Script (`src/preload`)**:
+   - Secures the application via Electron's `contextBridge`.
+   - Exposes a fully typed `window.context` API (e.g., `getNotes`, `readNote`, `writeNote`, `deleteNote`) enabling the frontend to securely interact with the Main process without exposing Node.js directly.
+3. **Renderer Process (`src/renderer`)**:
+   - **React 18** frontend integrated with **Vite** for incredibly fast Hot Module Replacement (HMR).
+   - **Jotai Atoms**: Notes, themes, and application state are broken down into atoms. Specialized logic is used to aggressively cache note content, updating the UI smoothly while asynchronous file-writes happen in the background.
+
+### 📁 Project Structure
+
+```text
+JotPad/
+├── build/                 # OS-specific application icons (macOS, Windows, Linux)
+├── resources/             # Assets consumed directly by the Main process
+├── src/
+│   ├── main/              # Electron main process (Node.js backend, File System ops)
+│   ├── preload/           # Secure IPC bridge (Exposes APIs to the Renderer)
+│   ├── renderer/          # React frontend (UI, Hooks, Store, Editor)
+│   │   ├── src/assets/    # Global CSS and images
+│   │   ├── src/components/# UI Components (MDEditor, Sidebar, Modals, Buttons)
+│   │   ├── src/hooks/     # Custom React hooks (useMD, useNotesList, etc.)
+│   │   └── src/store/     # Jotai atomic state declarations
+│   └── shared/            # Shared TypeScript types & constants across processes
+└── electron.vite.config.ts# Electron build configurations
 ```
 
-2. **Install dependencies**  
-```bash
-npm install
-```
+---
 
-3. **Set up environment variables**  
-```bash
-cp .env.example .env
-```
+## 🚀 Getting Started
 
-## 💻 Usage
+### Prerequisites
 
-### 1. Start development mode with hot reload  
+To build and run the application locally, you will need:
+
+- **Node.js** v18+ ([Download Node.js](https://nodejs.org/))
+- **Git**
+
+### Installation
+
+1. **Clone the repository**
+
+   ```bash
+   git clone https://github.com/tanbiralam/JotPad.git
+   cd JotPad
+   ```
+
+2. **Install dependencies**
+   ```bash
+   npm install
+   ```
+
+### Development
+
+To start the application in development mode with live reloading (HMR) for both the renderer and main processes:
+
 ```bash
 npm run dev
 ```
-This launches JotPad in development mode with live reload via `electron-vite`. Useful for active development and debugging.
 
-### 2. Preview production build locally  
-```bash
-npm run start
-```
-Runs the production build locally, simulating the packaged app environment before distribution.
+### Packaging & Distribution
 
-### 3. Build the application for your platform
+To build and package the application into a standalone executable for your operating system:
 
-- **Windows:**  
+**For Windows:**
+
 ```bash
 npm run build:win
 ```
 
-- **macOS:**  
+**For macOS:**
+
 ```bash
 npm run build:mac
 ```
 
-- **Linux:**  
+**For Linux (AppImage, deb, snap):**
+
 ```bash
 npm run build:linux
 ```
 
----
-
-### Example 1: Creating and Saving a Note Programmatically (TypeScript)
-
-```typescript
-import { writeFile } from 'fs-extra';
-import path from 'path';
-
-interface Note {
-  id: string;
-  title: string;
-  content: string;
-  lastModified: Date;
-}
-
-/**
- * Saves a note as a markdown file to the local filesystem.
- * @param note The note object to save.
- */
-async function saveNote(note: Note): Promise<void> {
-  const notesDir = path.resolve(process.env.NOTEPAD_STORAGE_DIR || './notes');
-  const filePath = path.join(notesDir, `${note.id}.md`);
-
-  try {
-    // Prepare markdown content
-    const markdown = `# ${note.title}\n\n${note.content}\n\n*Last Modified: ${note.lastModified.toISOString()}*`;
-
-    // Write file asynchronously
-    await writeFile(filePath, markdown, 'utf-8');
-    console.log(`Note "${note.title}" saved successfully at ${filePath}.`);
-  } catch (error) {
-    console.error('Failed to save note:', error instanceof Error ? error.message : error);
-    throw error;
-  }
-}
-
-// Usage
-const myNote: Note = {
-  id: 'note-123',
-  title: 'Meeting Notes',
-  content: 'Discuss project roadmap and milestones.',
-  lastModified: new Date(),
-};
-
-saveNote(myNote).catch(() => {
-  // Handle errors as needed
-});
-```
+The resulting executables will be generated inside the `dist/` directory.
 
 ---
 
-### Example 2: Using Jotai to Manage Note State in React
+## 🛠️ Modifying the Application
 
-```typescript
-import React from 'react';
-import { atom, useAtom } from 'jotai';
-
-// Define an atom to hold the current note content
-const noteContentAtom = atom<string>('');
-
-/**
- * NoteEditor component allows editing note content with atomic state management.
- */
-const NoteEditor: React.FC = () => {
-  const [content, setContent] = useAtom(noteContentAtom);
-
-  return (
-    <textarea
-      placeholder="Start typing your note..."
-      value={content}
-      onChange={(e) => setContent(e.target.value)}
-      style={{
-        width: '100%',
-        height: '300px',
-        fontSize: '1rem',
-        padding: '1rem',
-        borderRadius: '8px',
-        border: '1px solid #ccc',
-        fontFamily: 'monospace',
-      }}
-      aria-label="Note content editor"
-    />
-  );
-};
-
-export default NoteEditor;
-```
+- **Changing the App Logo**: Replacing the app logo requires updating three different assets:
+  1. `src/renderer/src/assets/icon.png` (Used inside the UI, like your splash screen)
+  2. `resources/icon.png` (Used for the active application window created by the Main process)
+  3. `build/icon.*` (Used by `electron-builder` to generate the `.exe` / `.app` desktop shortcuts). You will need an `.ico` for Windows and an `.icns` for Mac.
 
 ---
-
-### Example 3: Electron Preload Script for Secure IPC Communication
-
-```typescript
-import { contextBridge, ipcRenderer, IpcRendererEvent } from 'electron';
-
-interface Note {
-  id: string;
-  content: string;
-}
-
-contextBridge.exposeInMainWorld('electronAPI', {
-  /**
-   * Sends a request to save a note via IPC and awaits response.
-   * @param note The note object to save.
-   * @returns A promise that resolves to success status.
-   */
-  saveNote: async (note: Note): Promise<boolean> => {
-    try {
-      const response = await ipcRenderer.invoke('save-note', note);
-      if (typeof response === 'boolean') {
-        return response;
-      } else {
-        throw new Error('Invalid response from save-note IPC channel');
-      }
-    } catch (error) {
-      console.error('IPC saveNote error:', error instanceof Error ? error.message : error);
-      throw error;
-    }
-  },
-
-  /**
-   * Listen for note update events from the main process.
-   * @param callback Function to call when a note is updated.
-   */
-  onNoteUpdated: (callback: (noteId: string) => void) => {
-    ipcRenderer.on('note-updated', (_event: IpcRendererEvent, noteId: string) => {
-      callback(noteId);
-    });
-  },
-});
-```
-
-In your renderer process, you can use the exposed API like this:
-
-```typescript
-declare global {
-  interface Window {
-    electronAPI: {
-      saveNote: (note: { id: string; content: string }) => Promise<boolean>;
-      onNoteUpdated: (callback: (noteId: string) => void) => void;
-    };
-  }
-}
-
-// Usage example
-window.electronAPI.saveNote({ id: 'note-1', content: 'Hello world!' })
-  .then(() => console.log('Note saved successfully'))
-  .catch((error) => console.error('Failed to save note:', error));
-```
-
-## ⚙️ Configuration
-
-JotPad uses environment variables to configure key application behaviors and secrets. The primary variables are:
-
-| Variable               | Description                                           | Example                            | Required |
-|------------------------|-----------------------------------------------------|----------------------------------|----------|
-| `APP_ENV`              | Application environment mode (`development` or `production`) | `development`                    | Yes      |
-| `NOTEPAD_STORAGE_DIR`  | Local directory path where notes are stored         | `/Users/username/Documents/JotPad/notes` | Yes      |
-| `API_KEY`              | (Optional) API key for integrated external services | `1234abcd-5678efgh`               | No       |
-
-### Notes
-
-- Ensure the storage directory (`NOTEPAD_STORAGE_DIR`) exists and the application has write permissions.
-- Keep `API_KEY` and other sensitive variables secure; do **not** commit `.env` files with secrets to public repositories.
-- See `.env.example` for a template and detailed comments.
 
 ## 🤝 Contributing
 
-Contributions to JotPad are warmly welcome! To contribute:
+We welcome contributions! To contribute:
 
-1. Fork the repository on GitHub: [https://github.com/tanbiralam/JotPad](https://github.com/tanbiralam/JotPad)  
-2. Create your feature branch:
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+---
+
+## 📜 License
+
+Distributed under the MIT License. See [`LICENSE`](./LICENSE) for more information.
+
+---
+
+Made with ❤️ by [Tanbir Alam](https://github.com/tanbiralam).

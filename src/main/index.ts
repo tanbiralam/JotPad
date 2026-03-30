@@ -32,20 +32,18 @@ import icon from '../../resources/icon.png?asset'
 let mainWindow: BrowserWindow | null = null
 
 function createWindow(): void {
-  // Create the browser window.
   mainWindow = new BrowserWindow({
     width: 900,
     height: 670,
     show: false,
     autoHideMenuBar: true,
-    ...(process.platform === 'linux' ? { icon } : {}),
     center: true,
     title: 'JotPad',
     frame: true,
-    // vibrancy: 'under-window', Both are for mac os
-    // trafficLightPosition: { x: 15, y: 10 },
     visualEffectState: 'inactive',
     titleBarStyle: 'default',
+    icon: icon,
+    ...(process.platform === 'linux' ? { icon: icon } : {}),
 
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),
@@ -80,7 +78,7 @@ app.commandLine.appendSwitch('disable-gpu-shader-disk-cache')
 
 app.whenReady().then(() => {
   // Set app user model id for windows
-  electronApp.setAppUserModelId('com.electron')
+  electronApp.setAppUserModelId('com.tanbir.jotpad')
 
   // Default open or close DevTools by F12 in development
   // and ignore CommandOrControl + R in production.

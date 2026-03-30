@@ -5,8 +5,8 @@ interface SplashScreenProps {
   onFinished: () => void
 }
 
-const SPLASH_DURATION = 2500 // ms for progress bar
-const FADE_OUT_DURATION = 500 // ms for exit animation
+const SPLASH_DURATION = 2500
+const FADE_OUT_DURATION = 500
 
 export const SplashScreen = ({ onFinished }: SplashScreenProps) => {
   const [fadingOut, setFadingOut] = useState(false)

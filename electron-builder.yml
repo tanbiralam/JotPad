@@ -1,5 +1,5 @@
 appId: com.electron.app
-productName: note-app
+productName: JotPad
 directories:
   buildResources: build
 files:
@@ -12,7 +12,7 @@ files:
 asarUnpack:
   - resources/**
 win:
-  executableName: note-app
+  executableName: JotPad
 nsis:
   artifactName: ${name}-${version}-setup.${ext}
   shortcutName: ${productName}
