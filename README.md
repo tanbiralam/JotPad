@@ -1,8 +1,13 @@
 # JotPad 📝
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Electron Version](https://img.shields.io/badge/Electron-28.2.0-blue.svg)](https://www.electronjs.org/)
+[![React](https://img.shields.io/badge/React-18.2.0-61DAFB.svg)](https://react.dev/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.3-blue.svg)](https://www.typescriptlang.org/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4.2-38B2AC.svg)](https://tailwindcss.com/)
 [![Build Status](https://github.com/tanbiralam/JotPad/actions/workflows/build.yml/badge.svg)](https://github.com/tanbiralam/JotPad/actions/workflows/build.yml)
-[![Issues](https://img.shields.io/github/issues/tanbiralam/JotPad)](https://github.com/tanbiralam/JotPad/issues)
+[![GitHub issues](https://img.shields.io/github/issues/tanbiralam/JotPad)](https://github.com/tanbiralam/JotPad/issues)
+[![GitHub stars](https://img.shields.io/github/stars/tanbiralam/JotPad?style=social)](https://github.com/tanbiralam/JotPad/stargazers)
 
 **JotPad** is a modern, lightweight, and extensible note-taking desktop application built with **Electron**, **React**, and **TypeScript**.
 
@@ -73,6 +78,7 @@ JotPad/
 │   └── shared/               # Shared TypeScript types
 └── electron.vite.config.ts
 ```
+
 ````
 
 ---
@@ -144,3 +150,4 @@ Distributed under the **MIT License**. See [`LICENSE`](./LICENSE) for more detai
 ---
 
 **Made with ❤️ by [Tanbir Alam](https://github.com/tanbiralam)**
+````
